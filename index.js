@@ -9,6 +9,7 @@ import JetList from "./src/Items/List";
 import JetPivotButton from "./src/Pivot/Button";
 import JetPivotInput from "./src/Pivot/Input";
 import JetForm from './src/Elements/Form';
+import JetDetail from './src/Elements/Detail';
 import JetNotifications from './src/Elements/Notifications';
 import JetPagination from './src/Elements/Pagination';
 import JetTimestamp from './src/Elements/Timestamp';
@@ -36,6 +37,7 @@ export {
     JetGrid,
     JetList,
     JetForm,
+    JetDetail,
     JetQueryDropdown,
     JetQueryGroup,
     JetQueryRange,
