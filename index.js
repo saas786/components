@@ -20,6 +20,7 @@ import JetTextarea from './src/Inputs/Textarea';
 import ToggleFilters from './src/Mixins/ToggleFilters';
 import ToggleSidebar from './src/Mixins/ToggleSidebar';
 import ClickOutside from './src/Mixins/ClickOutside';
+import Permissions from './src/Mixins/Permissions';
 
 import vQuery from '@jetstreamkit/v-query';
 
@@ -28,6 +29,7 @@ export default {
     install: (app, options) => {
         app.use(vQuery);
         app.use(ClickOutside);
+        app.use(Permissions);
     }
 
 }
