@@ -29,7 +29,7 @@ export default {
     install: (app, options) => {
         app.use(vQuery);
         app.use(ClickOutside);
-        app.use(Permissions);
+        app.mixin(Permissions);
     }
 
 }
