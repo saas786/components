@@ -62,7 +62,7 @@ export default {
     },
     computed: {
       links() {
-        if(this.items.meta.links) {
+        if(this.items.meta && this.items.meta.links) {
           return this.item.meta.links
         }
         if(this.items.links) {
