@@ -15,7 +15,7 @@
         </li>
       </ul>
       <jet-pagination
-        :links="data.links"
+        :links="links"
         class="p-5 border-t"
       />
     </div>
@@ -61,6 +61,16 @@ export default {
         },
     },
     computed: {
+      links() {
+        if(this.items.meta.links) {
+          return this.item.meta.links
+        }
+        if(this.items.links) {
+          return this.items.links
+        }
+
+        return []
+      },
       gridClasses() {
           return 'grid grid-cols-1 sm:grid-cols-'+ this.columns +' gap-x-4 gap-y-8';
       },

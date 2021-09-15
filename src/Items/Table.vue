@@ -55,7 +55,7 @@
       </table>
       <jet-pagination
         class="p-5 border-t"
-        :links="items.links"
+        :links="links"
         :ajax="ajax"
         @clicked="get"
       />
@@ -102,6 +102,18 @@ export default {
                 : data;
         }
     },
+  },
+  computed: {
+    links() {
+      if(this.items.meta.links) {
+        return this.item.meta.links
+      }
+      if(this.items.links) {
+        return this.items.links
+      }
+
+      return []
+    }
   },
   methods: {
       visit(entry) {

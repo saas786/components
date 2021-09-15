@@ -20,7 +20,7 @@
         </li>
       </ul>
       <jet-pagination
-        :links="data.links"
+        :links="links"
         class="p-5 border-t"
       />
     </div>
@@ -51,7 +51,18 @@ export default {
             default: 'id'
         }
     },
+  computed: {
+    links() {
+      if(this.items.meta.links) {
+        return this.item.meta.links
+      }
+      if(this.items.links) {
+        return this.items.links
+      }
 
+      return []
+    }
+  },
   methods: {
       visit(entry) {
           if(this.click === undefined) {
