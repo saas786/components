@@ -106,7 +106,7 @@ export default {
   computed: {
     links() {
       if(this.items.meta && this.items.meta.links) {
-        return this.item.meta.links
+        return this.items.meta.links
       }
       if(this.items.links) {
         return this.items.links
