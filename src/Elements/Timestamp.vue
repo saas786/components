@@ -24,7 +24,7 @@ export default {
     },
 
     beforeMount() {
-        if(!this.value) {
+        if(! this.value) {
           return;
         }
 
