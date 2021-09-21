@@ -24,6 +24,10 @@ export default {
     },
 
     beforeMount() {
+        if(!this.value) {
+          return;
+        }
+
         let date = new Date(this.value)
 
         this.title = date.toLocaleString()
