@@ -1,6 +1,6 @@
 {
     "name": "@jetstreamkit/components",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "description": "Vue + Tailwind components for Laravel Jetstream",
     "main": "src/index.js",
     "scripts": {
