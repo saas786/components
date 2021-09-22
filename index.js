@@ -10,6 +10,8 @@ import JetPivotButton from "./src/Pivot/Button";
 import JetPivotInput from "./src/Pivot/Input";
 import JetForm from './src/Elements/Form';
 import JetDetail from './src/Elements/Detail';
+import JetFinder from './src/Elements/Finder';
+import JetTitle from './src/Elements/JetTitle';
 import JetNotifications from './src/Elements/Notifications';
 import JetPagination from './src/Elements/Pagination';
 import JetTimestamp from './src/Elements/Timestamp';
@@ -40,6 +42,8 @@ export {
     JetList,
     JetForm,
     JetDetail,
+    JetFinder,
+    JetTitle,
     JetQueryDropdown,
     JetQueryGroup,
     JetQueryRange,
