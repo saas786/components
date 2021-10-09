@@ -65,8 +65,8 @@
 import Items from '../Mixins/Items';
 
 export default {
-  mixins: {
+  mixins: [
     Items
-  },
+  ],
 };
 </script>
