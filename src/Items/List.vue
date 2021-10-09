@@ -1,12 +1,12 @@
 <template>
   <div>
     <div v-if="data.data && data.data.length">
-      <ul :class="list">
+      <ul :class="wrapperClass">
         <li
           v-for="(entry, index) in data.data"
           :key="entry.id"
           class="relative"
-          :class="item"
+          :class="itemClass + ' ' + cursorWhenClickable"
           test="item"
           @click="visit(entry)"
         >
@@ -31,51 +31,11 @@
     </div>
   </div>
 </template>
+
 <script>
-import JetPagination from './Pagination';
-import JetEmpty from './Empty';
+import Items from '../Mixins/Items'
 
 export default {
-
-  components: {
-    JetPagination,
-    JetEmpty,
-  },
-    props: {
-      data: Object,
-        click: [String, Object],
-        list: String,
-        item: String,
-        itemKey: {
-          type: String,
-            default: 'id'
-        }
-    },
-  computed: {
-    links() {
-      if(this.items.meta && this.items.meta.links) {
-        return this.item.meta.links
-      }
-      if(this.items.links) {
-        return this.items.links
-      }
-
-      return []
-    }
-  },
-  methods: {
-      visit(entry) {
-          if(this.click === undefined) {
-              return;
-          }
-          if (typeof this.click === 'string') {
-              return this.$inertia.visit(
-                  route(this.click, entry[this.itemKey]),
-              );
-          }
-
-          this.click(entry)
-      },
-  }
-};
+  mixins: [ Items ],
+}
 </script>

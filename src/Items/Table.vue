@@ -1,25 +1,21 @@
 <template>
   <div class="overflow-auto">
     <div v-if="items && items.data && items.data.length > 0">
-      <table
-        class="whitespace-nowrap w-full"
-        cellspacing="0"
-        cellpadding="0"
-      >
+      <table class="whitespace-nowrap w-full" cellspacing="0" cellpadding="0">
         <thead>
           <tr class="text-left font-bold border-b" test="header">
-            <th
+          <th
               v-for="th in cells"
               class="px-6 pt-6 pb-4"
-            >
-              <slot :name="`th.${th}`">
+          >
+            <slot :name="`th.${th}`">
                 <span class="capitalize">
                   {{ th.replace('_', ' ') }}
                 </span>
-              </slot>
-            </th>
-            <th v-if="$slots['tr.after']" />
-          </tr>
+            </slot>
+          </th>
+          <th v-if="$slots['tr.after']" />
+        </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
           <tr
@@ -27,114 +23,50 @@
             :key="item.id"
             test="item"
             :class="{ 'cursor-pointer hover:bg-gray-50': this.click }"
-          >
-            <td
+        >
+          <td
               v-for="cell in cells"
               class="px-6 py-4"
               @click="visit(item)"
-            >
-              <slot
+          >
+            <slot
                 :name="`td.${cell}`"
                 :value="item[cell]"
                 :index="index"
                 :item="item"
-              >
-                {{ item[cell] }}
-              </slot>
-            </td>
-            <td v-if="$slots['tr.after']">
-              <div class="flex justify-end">
-                <slot
-                  name="tr.after"
-                  :value="item"
-                />
-              </div>
-            </td>
-          </tr>
+            >
+              {{ item[cell] }}
+            </slot>
+          </td>
+          <td v-if="$slots['td-last']">
+            <div class="flex justify-end">
+              <slot name="td-last" :row="item" />
+            </div>
+          </td>
+        </tr>
         </tbody>
       </table>
       <jet-pagination
-        class="p-5 border-t"
-        :links="links"
-        :ajax="ajax"
-        @clicked="get"
+          class="p-5 border-t"
+          :links="links"
+          :ajax="ajax"
+          @clicked="get"
       />
     </div>
     <div v-else>
-        <slot name="empty">
-            <jet-empty />
-        </slot>
+      <slot name="empty">
+        <jet-empty />
+      </slot>
     </div>
   </div>
 </template>
 
 <script>
-import JetPagination from './Pagination';
-import JetEmpty from './Empty';
+import Items from '../Mixins/Items';
 
 export default {
-  components: {
-    JetPagination,
-    JetEmpty,
-  },
-  props: {
-    cells: Array,
-    data: Object,
-    click: [String, Function],
-    ajax: Boolean,
-    itemKey: {
-        type: String,
-        default: 'id'
-    }
-  },
-  data() {
-    return {
-      items: [],
-    };
-  },
-  watch: {
-    data: {
-        deep: true,
-        immediate: true,
-        handler(data) {
-            this.items = data.data === undefined
-                ? { data }
-                : data;
-        }
-    },
-  },
-  computed: {
-    links() {
-      if(this.items.meta && this.items.meta.links) {
-        return this.items.meta.links
-      }
-      if(this.items.links) {
-        return this.items.links
-      }
-
-      return []
-    }
-  },
-  methods: {
-      visit(entry) {
-          if(this.click === undefined) {
-              return;
-          }
-          if (typeof this.click === 'string') {
-              return this.$inertia.visit(
-                  route(this.click, entry[this.itemKey]),
-              );
-          }
-
-          this.click(entry)
-      },
-    get(url) {
-      axios.get(url, {
-        headers: { 'Content-Type': 'application/json' },
-      }).then((response) => {
-        this.items = response.data;
-      });
-    },
+  mixins: {
+    Items
   },
 };
 </script>
