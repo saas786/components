@@ -26,6 +26,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import Items from '../Mixins/Items'
 
