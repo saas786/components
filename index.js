@@ -1,4 +1,3 @@
-import Filtering from './src/Query/Filtering';
 import JetQueryDropdown from "./src/Query/Dropdown";
 import JetQueryGroup from "./src/Query/Group";
 import JetQueryRange from "./src/Query/Range";
@@ -19,6 +18,8 @@ import JetImageInput from './src/Inputs/Image';
 import JetFileInput from './src/Inputs/File';
 import JetTextarea from './src/Inputs/Textarea';
 
+import Items from './src/Mixins/Items';
+import Filtering from './src/Mixins/Filtering';
 import ToggleFilters from './src/Mixins/ToggleFilters';
 import ToggleSidebar from './src/Mixins/ToggleSidebar';
 import ClickOutside from './src/Mixins/ClickOutside';
@@ -49,7 +50,6 @@ export {
     JetQueryRange,
     JetPivotButton,
     JetPivotInput,
-    Filtering,
     JetNotifications,
     JetPagination,
     JetTimestamp,
@@ -60,4 +60,6 @@ export {
     // mixins
     ToggleFilters,
     ToggleSidebar,
+    Filtering,
+    Items,
 }
