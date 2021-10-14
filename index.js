@@ -19,11 +19,14 @@ import JetFileInput from './src/Inputs/File';
 import JetTextarea from './src/Inputs/Textarea';
 
 import Items from './src/Mixins/Items';
+import Connect from './src/Mixins/Connect';
 import Filtering from './src/Mixins/Filtering';
 import ToggleFilters from './src/Mixins/ToggleFilters';
 import ToggleSidebar from './src/Mixins/ToggleSidebar';
 import ClickOutside from './src/Mixins/ClickOutside';
 import Permissions from './src/Mixins/Permissions';
+
+import ConnectedComponents from './src/Classses/ConnectedComponents'
 
 import vQuery from '@jetstreamkit/v-query';
 
@@ -33,6 +36,10 @@ export default {
         app.use(vQuery);
         app.use(ClickOutside);
         app.mixin(Permissions);
+        app.provide(
+            '$connectedComponents',
+            new ConnectedComponents()
+        );
     }
 
 }
@@ -61,5 +68,6 @@ export {
     ToggleFilters,
     ToggleSidebar,
     Filtering,
+    Connect,
     Items,
 }
