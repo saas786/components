@@ -69,5 +69,5 @@ export {
     ToggleSidebar,
     Filtering,
     Connect,
-    Items,
+    Items
 }

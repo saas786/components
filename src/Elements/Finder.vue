@@ -1,5 +1,5 @@
 <template>
-  <div class="flex space-x-4">
+  <div class="flex space-x-4 p-5">
     <div class="flex-1">
       <div class="relative rounded-md shadow-sm">
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -7,13 +7,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
-        <input autocomplete="off" v-query="update" type="text" name="search" id="search" class="focus:ring-gray-500 focus:border-gray-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="Search">
+        <input autocomplete="off" v-query:[connect]="update" type="text" name="search" id="search" class="focus:ring-gray-500 focus:border-gray-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="Search">
       </div>
     </div>
 
-    <jet-select v-if="trashed" :options="trashOptions" empty="Not Trashed" v-query="update" />
+    <jet-select v-if="trashed" :options="trashOptions" empty="Not Trashed" v-query:[connect]="update" />
 
-    <jet-select :options="sortOptions" empty="Sort" v-query="update" />
+    <jet-select :options="sortOptions" empty="Sort" v-query:[connect]="update" />
   </div>
 </template>
 
@@ -21,6 +21,7 @@
 import JetInput from '@/Jetstream/Input'
 import { JetSelect } from '@jetstreamkit/components'
 import Connect from '../Mixins/Connect';
+import {Inertia} from "@inertiajs/inertia";
 
 export default {
   props: {
@@ -34,9 +35,20 @@ export default {
     JetInput,
     JetSelect,
   },
+    data() {
+      return {
+          searching: null,
+          sorting: null,
+          trashing: null,
+      }
+    },
   methods: {
-    update(payload) {
-      this.connectChanged('updateQuery', payload)
+    update(payload, navigate) {
+        if(this.connect) {
+            this.connectChanged('updateQuery', payload)
+        } else {
+            navigate(payload)
+        }
     },
     displayFormat(item)  {
       return item
