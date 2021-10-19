@@ -8,7 +8,14 @@
             </div>
             <div v-if="fieldsFormatted.length" class="bg-white p-5 grid grid-cols-12 gap-4">
                 <div v-for="(field, index) in fieldsFormatted" :key="field.name" class="py-2" :class="`col-span-${field.span}`">
+                    <div v-if="field.divider" class="border-b pb-5"></div>
+                    <slot v-else-if="field.section_title" name="section_title">
+                        <p class="flex-1 font-semibold tracking-wider text-gray-700 leading-tight pb-4 border-b">
+                            {{ field.section_title }}
+                        </p>
+                    </slot>
                     <slot
+                        v-else
                         :name="`field.${field.name}.all`"
                         :errors="errors"
                         :index="index"
