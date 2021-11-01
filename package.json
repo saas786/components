@@ -24,8 +24,14 @@
         "vue": "^3.0.0"
     },
     "dependencies": {
+        "@headlessui/vue": "^1.4.1",
         "@inertiajs/inertia": "^0.9.1",
-        "@jetstreamkit/v-query": "^0.1",
-        "javascript-time-ago": "^2.3.6"
+        "@jetstreamkit/v-query": "file:../v-query",
+        "javascript-time-ago": "^2.3.6",
+        "lodash.get": "^4.4.2",
+        "lodash.set": "^4.3.2"
+    },
+    "devDependencies": {
+        "@vue/test-utils": "^2.0.0-rc.16"
     }
 }

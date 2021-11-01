@@ -13,6 +13,10 @@ export default class ConnectedComponents
     }
 
     for(key) {
-        return this.connections[key]
+        if(this.connections.hasOwnProperty(key)) {
+            return this.connections[key]
+        }
+
+        return new Events;
     }
 }

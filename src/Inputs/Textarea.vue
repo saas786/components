@@ -1,8 +1,8 @@
 <template>
     <div>
-        <textarea :placeholder="placeholder" @input="grow" v-model="value" :class="{'resize-none': !resize}" class="shadow border-gray-300 rounded w-full focus:outline-none active:outline-none"></textarea>
-        <slot name="footer" :length="value.length">
-            <p class="text-xs py-1 text-gray-400" v-if="max > 0">{{ value.length }} / {{ max }}</p>
+        <textarea :rows="rows" :placeholder="placeholder" @input="update" :class="{'resize-none': !resize}" class="shadow border-gray-300 rounded w-full focus:outline-none active:outline-none" v-text="modelValue" />
+        <slot name="footer" :length="modelValue.length" v-if="modelValue">
+            <p class="text-xs py-1 text-gray-400" v-if="max > 0">{{ modelValue.length }} / {{ max }}</p>
         </slot>
     </div>
 </template>
@@ -10,6 +10,14 @@
 export default {
     props: {
         resize: Boolean,
+        modelValue: {
+            type: String,
+            default: ''
+        },
+        rows: {
+            type: Number,
+            default: 5
+        },
         max: {
             type: Number,
             default: 0
@@ -18,15 +26,11 @@ export default {
             default: 'Type something',
         }
     },
-    data() {
-        return {
-            value: ''
-        }
-    },
     methods: {
-        grow(event) {
+        update(event) {
             event.target.style.height = "auto";
             event.target.style.height = `${event.target.scrollHeight}px`;
+            this.$emit('update:modelValue', event.target.value)
         },
     },
     mounted() {

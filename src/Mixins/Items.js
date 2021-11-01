@@ -1,11 +1,7 @@
-import JetPagination from '../Items/Pagination';
-import JetEmpty from '../Items/Empty';
+import Connect from "./Connect";
 
 export default {
-    components: {
-        JetPagination,
-        JetEmpty,
-    },
+    mixins: [Connect],
     props: {
         url: String,
         cells: Array,
@@ -13,6 +9,10 @@ export default {
         click: [String, Function],
         wrapperClass: String,
         itemClass: String,
+        itemDisplay: {
+            type: String,
+            default: 'id'
+        },
         itemKey: {
             type: String,
             default: 'id'
@@ -30,6 +30,29 @@ export default {
                     : data;
             }
         },
+    },
+    created() {
+        if(!this.url) return;
+
+        this.currentUrl = this.url;
+
+        this.onConnectChange('updateUrl', (url) => {
+            this.currentUrl = url;
+            this.get(url)
+        });
+
+        this.onConnectChange('refresh', () => {
+            this.get(this.currentUrl)
+        });
+
+        this.onConnectChange('updateQuery', (payload) => {
+            let existing = (new URL(this.url));
+            let override = Object.fromEntries(existing.searchParams.entries());
+            payload = Object.assign(payload, override)
+            let queryString = new URLSearchParams(payload).toString();
+            this.currentUrl = existing.pathname + '?' + queryString;
+            this.get(this.currentUrl)
+        });
     },
     mounted() {
         if(this.url) {

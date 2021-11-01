@@ -3,39 +3,38 @@
         <div v-if="items && items.data && items.data.length > 0">
             <table class="whitespace-nowrap w-full" cellspacing="0" cellpadding="0">
                 <thead>
-                <tr class="text-left font-bold border-b" test="header">
+                <tr class="text-left font-bold border-b">
                     <th
-                        v-for="th in cells"
-                        class="px-6 pt-6 pb-4"
+                        v-for="th in cellsFormatted"
+                        class="px-5 py-3"
                     >
-                        <slot :name="`th.${th}`">
+                        <slot :name="`th.${th.name}`">
                             <span class="capitalize">
-                              {{ th.replace('_', ' ') }}
+                              {{ th.display }}
                             </span>
                         </slot>
                     </th>
-                    <th v-if="$slots['tr.after']" />
+                    <th v-if="$slots['tr-last']" />
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                 <tr
                     v-for="(item, index) in items.data"
                     :key="item.id"
-                    test="item"
                     :class="{ 'cursor-pointer hover:bg-gray-50': this.click }"
                 >
                     <td
-                        v-for="cell in cells"
+                        v-for="cell in cellsFormatted"
                         class="px-6 py-4"
                         @click="visit(item)"
                     >
                         <slot
-                            :name="`td.${cell}`"
-                            :value="item[cell]"
+                            :name="`td.${cell.name}`"
+                            :value="item[cell.name]"
                             :index="index"
                             :item="item"
                         >
-                            {{ item[cell] }}
+                            {{ data_get(item, cell.path) }}
                         </slot>
                     </td>
                     <td v-if="$slots['td-last']">
@@ -48,9 +47,8 @@
             </table>
             <jet-pagination
                 class="p-5 border-t"
+                :connect="connect"
                 :links="links"
-                :ajax="ajax"
-                @clicked="get"
             />
         </div>
         <div v-else>
@@ -63,35 +61,59 @@
 
 <script>
 import Items from '../Mixins/Items';
-import Connect from '../Mixins/Connect';
 
 export default {
     mixins: [
         Items,
-        Connect,
     ],
     data() {
         return {
-            currentUrl: null
+            currentUrl: null,
+            cellsFormatted: []
         }
     },
-    created() {
-        if(!this.url) return;
+    beforeMount() {
+        let output = [];
 
-        this.currentUrl = this.url;
+        this.cells.forEach(cell => {
+            let column = cell;
+            let display = cell;
 
-        this.onConnectChange('refresh', () => {
-            this.get(this.currentUrl)
-        });
+            if(cell.includes('.')) {
+                display = cell.split('.')[0]
+                column = cell.split('.')[1]
+            }
 
-        this.onConnectChange('updateQuery', (payload) => {
-            let existing = (new URL(this.url));
-            let override = Object.fromEntries(existing.searchParams.entries());
-            payload = Object.assign(payload, override)
-            let queryString = new URLSearchParams(payload).toString();
-            this.currentUrl = existing.pathname + '?' + queryString;
-            this.get(this.currentUrl)
-        });
-    }
+            output.push({
+                path: cell,
+                name: column,
+                display: display.replace('_', ' ')
+            })
+        })
+
+        this.cellsFormatted = output
+    },
+    methods: {
+        data_get(obj, key) {
+            let target = obj;
+
+            if(! key.includes('.')) {
+                if(obj.hasOwnProperty(key)) {
+                    return obj[key];
+                }
+
+                return null
+            }
+
+            key.split('.').forEach(segment => {
+                if(target.hasOwnProperty(segment)) {
+                    target = target[segment];
+                }
+            })
+
+
+            return target;
+        }
+    },
 };
 </script>

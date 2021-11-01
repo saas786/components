@@ -5,7 +5,6 @@
         <li
           v-for="(entry, index) in data.data"
           :key="entry.id"
-          test="item"
           :class="itemClass + ' ' + cursorWhenClickable"
           @click="visit(entry)"
         >
@@ -14,10 +13,11 @@
           </slot>
         </li>
       </ul>
-      <jet-pagination
-        :links="links"
-        class="p-5 border-t"
-      />
+        <jet-pagination
+            class="p-5 border-t"
+            :connect="connect"
+            :links="links"
+        />
     </div>
     <div v-else>
         <slot name="empty">

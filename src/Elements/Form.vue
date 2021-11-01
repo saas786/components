@@ -18,6 +18,7 @@
                         v-else
                         :name="`field.${field.name}.all`"
                         :errors="errors"
+                        :error="getError(field.name)"
                         :index="index"
                         :form="form"
                     >
@@ -38,7 +39,6 @@
                                         <component
                                             :is="field.component"
                                             :id="field.name"
-                                            type="text"
                                             :name="field.name"
                                             :placeholder="field.label"
                                             class="w-full"
@@ -104,6 +104,7 @@ import JetLabel from '@/Jetstream/Label';
 import JetInput from '@/Jetstream/Input';
 import JetInputError from '@/Jetstream/InputError';
 import Connect from '../Mixins/Connect';
+import Config from '../Mixins/Config';
 
 export default {
     components: {
@@ -113,7 +114,7 @@ export default {
         JetInputError,
         JetSecondaryButton
     },
-    mixins: [Connect],
+    mixins: [Connect, Config],
     props: {
         action: String,
         method: String,
@@ -121,8 +122,18 @@ export default {
             type: String,
             default: 'new-password'
         },
+        exclude: {
+            type: Array,
+            default: ['id', 'uuid', 'created_at', 'updated_at', 'deleted_at', 'parent_deleted_at']
+        },
         fields: {
-            default: () => []
+            default: (props) => {
+                if(!props.fields && props.values !== undefined) {
+                    return Object.keys(props.values).filter(field => ! props.exclude.includes(field))
+                } else {
+                    return []
+                }
+            }
         },
         values: Object,
     },
@@ -131,7 +142,7 @@ export default {
             form: null,
             success: false,
             formMethod: null,
-            errors: null,
+            errors: null
         }
     },
     beforeMount() {
@@ -145,13 +156,17 @@ export default {
             ) ? 'PUT' : 'POST'
         }
 
-        let formValues = this.values ?? {}
+        let formValues = {}
 
-        if(Object.keys(formValues).length === 0) {
-            this.fieldsFormatted.forEach(field => {
-                formValues[field.name] = null
-            })
+        if(this.values) {
+            formValues = JSON.parse(JSON.stringify(this.values));
         }
+
+        this.fieldsFormatted.forEach(field => {
+            formValues[field.name] = formValues.hasOwnProperty(field.name)
+                ? formValues[field.name]
+                : null
+        })
 
         if(this.connect) {
             this.form = formValues
@@ -163,18 +178,30 @@ export default {
             this.form._method = 'put'
         }
     },
+
     methods: {
         defaultFieldFormat(field) {
-            return {
+
+            let output = {
                 name: field,
                 label: field.replaceAll('_', ' '),
                 component: 'jet-input',
-                props: {},
+                props: {
+                    type: 'text'
+                },
                 span: '12',
-            }
+            };
+
+            let fieldConfig = this.config.get(`fields.${field}`, {});
+
+            Object.keys(fieldConfig).forEach(setting => {
+                output[setting] = this.config.get(`fields.${field}.${setting}`)
+            })
+
+            return output
         },
         cancel() {
-            this.$emit('canceled')
+            this.$emit('cancel')
         },
         submit() {
             this.success = false;
@@ -209,10 +236,23 @@ export default {
                 })
             }
         },
+
+        // todo: normalize the errors array instead
+        getError(name) {
+            if(this.errors && this.errors.hasOwnProperty(name)) {
+                if(Array.isArray(this.errors[name])) {
+                    return this.errors[name][0]
+                } else {
+                    return this.errors[name]
+                }
+            }
+
+            return null
+        }
     },
     computed: {
         hasCancelListener() {
-            return this.$attrs && this.$attrs.onCanceled;
+            return this.$attrs && this.$attrs.onCancel;
         },
         fieldsFormatted() {
             let formatted = [];
@@ -240,6 +280,11 @@ export default {
 
                 if(! newField.hasOwnProperty('component')) {
                     newField.component = 'jet-input'
+                }
+
+                if(! newField.hasOwnProperty('props')
+                    && newField.component === 'jet-input') {
+                    newField.props = {type: 'text'}
                 }
 
                 formatted.push(newField)

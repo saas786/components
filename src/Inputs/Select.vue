@@ -1,5 +1,5 @@
 <template>
-    <select v-bind="$attrs" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+    <select v-bind="$attrs" @change="filtered" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
         <option value="" v-if="empty">{{ empty }}</option>
         <option v-for="option in formattedOptions" :value="option.value" :data-name="option.name">
             {{ option.display }}
@@ -9,39 +9,67 @@
 <script>
 
 export default {
-  props: {
-      empty: String,
-      options: {
-          default: [],
-          type: [Object, Array]
-      },
-      default: String,
-  },
+    props: {
+        empty: String,
+        url: String,
+        options: {
+            default: [],
+            type: [Object, Array]
+        },
+        default: String,
+    },
+    beforeMount() {
+        if(this.url) {
+            axios.get(this.url).then(response => {
+                this.selectOptions = response.data;
+            })
+        } else {
+            this.selectOptions = this.options
+        }
+    },
+    data() {
+        return {
+            selectOptions: []
+        }
+    },
+    methods: {
+        filtered(event) {
+            // one less to account for default option
+            let index =  this.empty
+                ? event.target.selectedIndex - 1
+                : event.target.selectedIndex;
+
+            localStorage.setItem('filters', JSON.stringify(this.formattedOptions[index]))
+        }
+    },
     computed: {
-      formattedOptions() {
-          if(Array.isArray(this.options)
-              && this.options.length
-              && typeof this.options[0] === 'object') {
-              return this.options;
-          }
+        formattedOptions() {
+            if(this.url) {
+                return this.selectOptions.data
+            }
+            if(Array.isArray(this.options)
+                && this.options.length
+                && typeof this.options[0] === 'object') {
+                return this.options;
+            }
 
-          let options = []
+            let options = []
 
-          if(Array.isArray(this.options)
-              && this.options.length
-              && this.options[0] !== 'object') {
-              this.options.forEach(option => {
+            if(Array.isArray(this.options)
+                && this.options.length
+                && this.options[0] !== 'object') {
+                this.options.forEach(option => {
                   options.push({display: option, value: option})
-              })
-              return options;
-          }
+                })
+                return options;
+            }
 
-          Object.keys(this.options).forEach(key => {
+            Object.keys(this.options).forEach(key => {
               options.push({display: this.options[key], value: key})
-          })
+            })
 
-          return options;
-      }
+            return options;
+        }
     }
 };
 </script>

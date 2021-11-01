@@ -1,16 +1,21 @@
 <template>
   <div class="border-gray-200 px-4 py-5 sm:p-0">
     <dl class="sm:divide-y sm:divide-gray-200">
-      <div v-for="key in Object.keys(data)" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-        <slot :name="`row.${key}`" :value="data[key]">
+      <div v-for="item in valuesFormatted" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <slot :name="`row.${item.key}`" :value="item.value">
           <dt class="capitalize text-sm font-medium text-gray-500">
-            <slot :name="`key.${key}`" :value="data[key]">
-              {{  key.replaceAll('_', ' ')  }}
+            <slot :name="`item.key.${item.key}`" :value="item.value">
+              {{  item.display  }}
             </slot>
           </dt>
           <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <slot :name="`value.${key}`" :value="data[key]">
-              {{  data[key]  }}
+            <slot :name="`value.${item.key}`" :value="item.value">
+                <component
+                    :is="item.component"
+                    :key="item.key"
+                    :value="item.value"
+                    :display="item.display"
+                />
             </slot>
           </dd>
         </slot>
@@ -20,9 +25,40 @@
 </template>
 
 <script>
+import Config from "../Mixins/Config";
+import { markRaw } from 'vue'
+
 export default {
-  props: {
-    data: Object
-  }
+    mixins: [Config],
+    props: {
+        values: Object
+    },
+
+    computed: {
+        valuesFormatted() {
+            if(!this.values) {
+                return {}
+            }
+
+            let output = {};
+
+            Object.keys(this.values).forEach(key => {
+                output[key] = markRaw({
+                    key: key,
+                    value: this.values[key],
+                    display: this.config.get(
+                        `values.${key}.display`,
+                        key.replaceAll('_', ' ')
+                    ),
+                    component: this.config.get(`values.${key}.component`, {
+                        props: ['key', 'value', 'display'],
+                        template: '{{ value }}'
+                    })
+                })
+            })
+
+            return output;
+        }
+    }
 }
 </script>

@@ -1,13 +1,12 @@
 <template>
   <div>
-    <div v-if="data.data && data.data.length">
+    <div v-if="items.data">
       <ul :class="wrapperClass">
         <li
-          v-for="(entry, index) in data.data"
-          :key="entry.id"
+          v-for="(entry, index) in items.data"
+          :key="entry[itemKey]"
           class="relative"
           :class="itemClass + ' ' + cursorWhenClickable"
-          test="item"
           @click="visit(entry)"
         >
           <slot
@@ -15,14 +14,17 @@
             :index="index"
             :value="entry"
           >
-            id: {{ entry.id }}
+            <div class="py-2 px-6 border-t hover:bg-gray-50">
+              {{ entry[itemDisplay] }}
+            </div>
           </slot>
         </li>
       </ul>
-      <jet-pagination
-        :links="links"
-        class="p-5 border-t"
-      />
+        <jet-pagination
+            class="p-5 border-t"
+            :connect="connect"
+            :links="links"
+        />
     </div>
     <div v-else>
         <slot name="empty">
