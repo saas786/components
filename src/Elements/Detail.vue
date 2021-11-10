@@ -31,31 +31,54 @@ import { markRaw } from 'vue'
 export default {
     mixins: [Config],
     props: {
-        values: Object
+        keys: {
+            type: Array,
+            default: () => []
+        },
+        values: {
+            type: Object,
+            default: () => {}
+        },
+        exclude: {
+            type: Array,
+            default: () => []
+        },
     },
 
     computed: {
         valuesFormatted() {
-            if(!this.values) {
+            if(Object.keys(this.values).length === 0) {
                 return {}
             }
 
             let output = {};
 
-            Object.keys(this.values).forEach(key => {
-                output[key] = markRaw({
-                    key: key,
-                    value: this.values[key],
-                    display: this.config.get(
-                        `values.${key}.display`,
-                        key.replaceAll('_', ' ')
-                    ),
-                    component: this.config.get(`values.${key}.component`, {
-                        props: ['key', 'value', 'display'],
-                        template: '{{ value }}'
+            let keys = this.keys;
+
+            if(keys.length === 0) {
+                keys = Object.keys(this.values)
+            }
+
+            if(keys.length === 0) {
+                return {}
+            }
+
+            keys
+                .filter(key => ! this.exclude.includes(key))
+                .forEach(key => {
+                    output[key] = markRaw({
+                        key: key,
+                        value: this.values[key],
+                        display: this.config.get(
+                            `values.${key}.display`,
+                            key.replaceAll('_', ' ')
+                        ),
+                        component: this.config.get(`values.${key}.component`, {
+                            props: ['key', 'value', 'display'],
+                            template: '{{ value }}'
+                        })
                     })
                 })
-            })
 
             return output;
         }

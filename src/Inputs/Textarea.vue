@@ -1,6 +1,6 @@
 <template>
     <div>
-        <textarea :rows="rows" :placeholder="placeholder" @input="update" :class="{'resize-none': !resize}" class="shadow border-gray-300 rounded w-full focus:outline-none active:outline-none" v-text="modelValue" />
+        <textarea :rows="rows" :placeholder="placeholder" @input="update" :class="{'resize-none': !resize}" class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" v-text="modelValue" />
         <slot name="footer" :length="modelValue.length" v-if="modelValue">
             <p class="text-xs py-1 text-gray-400" v-if="max > 0">{{ modelValue.length }} / {{ max }}</p>
         </slot>

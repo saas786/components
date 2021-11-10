@@ -1,20 +1,30 @@
 <template>
     <div>
         <div class="flex space-x-4 items-center select-none">
-            <jet-input @click="isPicking = true" type="text" v-model="buttonText" class="w-full select-none cursor-pointer" />
-            <div v-if="hasClearedListener && (picked || initial && !isCleared)">
+
+            <jet-input
+                @click="isPicking = true"
+                type="text"
+                :value="buttonText"
+                :disabled="isDisabled"
+                class="w-full select-none cursor-pointer caret-transparent"
+                :class="{'bg-gray-50 cursor-not-allowed': isDisabled}"
+            />
+
+            <div v-if="picked || fill && !isCleared">
                 <svg @click="clear" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-gray-500 hover:text-black cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </div>
         </div>
 
-        <jet-modal :show="isPicking" @close="isPicking = false">
+        <jet-modal :show="isPicking" @close="isPicking = false" max-width="lg">
 
             <jet-finder :connect="`picker-${name}`" />
 
             <jet-list
                 :connect="`picker-${name}`"
+                :items-path="itemsPath"
                 :item-display="itemDisplay"
                 :url="url"
                 :click="pick"
@@ -39,24 +49,58 @@ export default {
     },
     props: {
         url: String,
-        initial: String,
+        fill: Object,
+        remember: Boolean,
+        name: {
+            type: String,
+            required: true,
+        },
         text: {
             type: String,
             default: 'Select'
         },
+        modelValue: String,
+        itemKey: {
+            type: String,
+            default: 'id'
+        },
         itemDisplay: {
             type: String,
-            default: 'display'
+            default: 'id'
+        },
+        itemsPath: {
+            type: String,
+            default: 'data'
+        },
+        chain: {
+            type: [String, Number, null],
+            default: 'none'
+        },
+    },
+    mounted() {
+        if(this.remember && this.modelValue) {
+            this.picked = JSON.parse(localStorage.getItem(this.localKey));
+        } if(this.isChained && this.chain) {
+            this.isDisabled  = false
+        } else if(this.isChained && !this.fill) {
+            this.isDisabled = true
         }
     },
     data() {
         return {
             picked: null,
             isCleared: false,
+            isDisabled: false,
             isPicking: false
         }
     },
     computed: {
+        isChained() {
+            return this.$props.chain !== 'none'
+        },
+        localKey() {
+            return `${window.location.pathname}:filter:${this.name}`
+        },
         buttonText() {
             if(this.isCleared) {
                 return this.text
@@ -66,17 +110,11 @@ export default {
                 return this.picked[this.itemDisplay];
             }
 
-            if(this.initial) {
-                return this.initial;
+            if(this.fill) {
+                return this.fill[this.itemDisplay];
             }
 
             return this.text;
-        },
-        clearText() {
-            return 'Clear'
-        },
-        hasClearedListener() {
-            return this.$attrs && this.$attrs.onCleared;
         }
     },
     methods: {
@@ -84,12 +122,26 @@ export default {
             this.picked = item;
             this.isPicking = false;
             this.isCleared = false;
-            this.$emit('picked', item);
+            this.$emit('picked', item)
+            this.$emit('update:modelValue', item[this.itemKey]);
+            if(this.remember) {
+                let payload = {}
+                payload[this.itemKey] = item[this.itemKey]
+                payload[this.itemDisplay] = item[this.itemDisplay]
+                localStorage.setItem(this.localKey, JSON.stringify(payload))
+            }
         },
         clear() {
             this.picked = null
             this.isCleared = true;
             this.$emit('cleared')
+            this.$emit('update:modelValue', null)
+        }
+    },
+    watch: {
+        chain(chain) {
+            this.clear()
+            this.isDisabled = chain === null;
         }
     }
 }

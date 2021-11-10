@@ -17,6 +17,8 @@ import JetTimestamp from './src/Elements/Timestamp';
 import JetQueryDropdown from "./src/Query/Dropdown";
 import JetQueryGroup from "./src/Query/Group";
 import JetQueryRange from "./src/Query/Range";
+// details
+import JetDetailText from './src/Details/Text'
 // inputs
 import JetPicker from './src/Inputs/Picker';
 import JetSelect from "./src/Inputs/Select";
@@ -81,6 +83,8 @@ export {
     JetTextarea,
     JetSelect,
     JetPicker,
+    // details
+    JetDetailText,
     // mixins
     ToggleFilters,
     ToggleSidebar,

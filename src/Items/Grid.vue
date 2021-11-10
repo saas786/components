@@ -3,7 +3,7 @@
     <div v-if="data.data && data.data.length">
       <ul :class="wrapperClass + grid">
         <li
-          v-for="(entry, index) in data.data"
+          v-for="(entry, index) in items"
           :key="entry.id"
           :class="itemClass + ' ' + cursorWhenClickable"
           @click="visit(entry)"

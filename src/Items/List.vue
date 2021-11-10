@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-if="items.data">
+    <div v-if="items.length">
       <ul :class="wrapperClass">
         <li
-          v-for="(entry, index) in items.data"
+          v-for="(entry, index) in items"
           :key="entry[itemKey]"
           class="relative"
           :class="itemClass + ' ' + cursorWhenClickable"

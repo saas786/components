@@ -1,4 +1,5 @@
 import Connect from "./Connect";
+import get from 'lodash.get';
 
 export default {
     mixins: [Connect],
@@ -9,6 +10,9 @@ export default {
         click: [String, Function],
         wrapperClass: String,
         itemClass: String,
+        itemsPath: {
+            default: 'data'
+        },
         itemDisplay: {
             type: String,
             default: 'id'
@@ -23,11 +27,9 @@ export default {
             deep: true,
             immediate: true,
             handler(data) {
-                if(!data) return;
-
-                this.items = data.data === undefined
-                    ? { data }
-                    : data;
+                data = !data ? [] : data;
+                this.setItems(data);
+                this.setLinks(data)
             }
         },
     },
@@ -62,19 +64,10 @@ export default {
     data() {
         return {
             items: [],
+            links: [],
         };
     },
     computed: {
-        links() {
-            if(this.items.meta && this.items.meta.links) {
-                return this.items.meta.links
-            }
-            if(this.items.links) {
-                return this.items.links
-            }
-
-            return []
-        },
         ajax() {
             return this.url != null;
         },
@@ -99,10 +92,29 @@ export default {
         },
         get(url) {
             axios.get(url, {
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Wants-Json': true,
+                },
             }).then((response) => {
-                this.items = response.data;
+                this.setItems(response.data)
+                this.setLinks(response.data)
             });
+        },
+
+        setItems(data) {
+            this.items = get(data, this.itemsPath, data);
+        },
+        setLinks(data) {
+            if(!data) {
+                this.links = []; return false;
+            } else if(data.meta && data.meta.links) {
+                this.links = data.meta.links
+            } else if(data.links) {
+                this.links = data.links
+            } else {
+                this.links = []
+            }
         },
     },
 };

@@ -1,6 +1,6 @@
 <template>
     <div class="overflow-auto">
-        <div v-if="items && items.data && items.data.length > 0">
+        <div v-if="items.length > 0">
             <table class="whitespace-nowrap w-full" cellspacing="0" cellpadding="0">
                 <thead>
                 <tr class="text-left font-bold border-b">
@@ -19,7 +19,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                 <tr
-                    v-for="(item, index) in items.data"
+                    v-for="(item, index) in items"
                     :key="item.id"
                     :class="{ 'cursor-pointer hover:bg-gray-50': this.click }"
                 >

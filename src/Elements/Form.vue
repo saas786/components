@@ -50,7 +50,7 @@
                                         />
                                     </slot>
 
-                                    <p v-if="errors && errors.hasOwnProperty(field.name)" class="pt-2">
+                                    <p v-if="errors && errors.hasOwnProperty(field.name)">
                                         <JetInputError :message="errors[field.name][0]" v-if="Array.isArray(errors[field.name])" />
                                         <JetInputError :message="errors[field.name]" v-else />
                                     </p>
