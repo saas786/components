@@ -3,7 +3,9 @@
 JetstreamKit vue components and mixins
 
 ### Install
+
 Within your resources/js/app.js file:
+
 ```js
 import JetstreamKit from '@jetstreamkit/components';
 ```

@@ -1,34 +1,34 @@
 {
-    "name": "@jetstreamkit/components",
-    "version": "0.0.24",
-    "description": "Vue + Tailwind components for Laravel Jetstream",
-    "main": "src/index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/jetstreamkit/components.git"
-    },
-    "keywords": [
-        "vue",
-        "tailwind"
-    ],
-    "author": "Brian Dillingham <brian@dillingham.dev>",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/jetstreamkit/components/issues"
-    },
-    "homepage": "https://github.com/jetstreamkit/components#readme",
-    "peerDependencies": {
-        "vue": "^3.0.0"
-    },
-    "dependencies": {
-        "@headlessui/vue": "^1.4.1",
-        "@inertiajs/inertia": "^0.9.1",
-        "@jetstreamkit/v-query": "*",
-        "javascript-time-ago": "^2.3.6",
-        "lodash.get": "^4.4.2",
-        "lodash.set": "^4.3.2"
-    }
+  "name": "@jetstreamkit/components",
+  "version": "0.0.24",
+  "description": "Vue + Tailwind components for Laravel Jetstream",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jetstreamkit/components.git"
+  },
+  "keywords": [
+    "vue",
+    "tailwind"
+  ],
+  "author": "Brian Dillingham <brian@dillingham.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jetstreamkit/components/issues"
+  },
+  "homepage": "https://github.com/jetstreamkit/components#readme",
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.4.1",
+    "@inertiajs/inertia": "^0.9.1",
+    "@jetstreamkit/v-query": "*",
+    "javascript-time-ago": "^2.3.6",
+    "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2"
+  }
 }

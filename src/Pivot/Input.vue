@@ -1,10 +1,7 @@
 <template>
   <div>
     <span v-for="item in items">{{ item[display] }}</span>
-    <input
-      type="text"
-      @keydown.enter="add"
-    >
+    <input type="text" @keydown.enter="add" />
     <div v-if="similarItems">
       <div v-for="option in options">
         {{ option[display] }}

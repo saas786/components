@@ -1,7 +1,7 @@
 // items
-import JetTable from "./src/Items/Table";
-import JetGrid from "./src/Items/Grid";
-import JetList from "./src/Items/List";
+import JetTable from './src/Items/Table';
+import JetGrid from './src/Items/Grid';
+import JetList from './src/Items/List';
 import JetEmpty from './src/Items/Empty';
 // elements
 import JetForm from './src/Elements/Form';
@@ -14,20 +14,20 @@ import JetPagination from './src/Elements/Pagination';
 import JetDropdown from './src/Elements/Dropdown';
 import JetTimestamp from './src/Elements/Timestamp';
 // query
-import JetQueryDropdown from "./src/Query/Dropdown";
-import JetQueryGroup from "./src/Query/Group";
-import JetQueryRange from "./src/Query/Range";
+import JetQueryDropdown from './src/Query/Dropdown';
+import JetQueryGroup from './src/Query/Group';
+import JetQueryRange from './src/Query/Range';
 // details
-import JetDetailText from './src/Details/Text'
+import JetDetailText from './src/Details/Text';
 // inputs
 import JetPicker from './src/Inputs/Picker';
-import JetSelect from "./src/Inputs/Select";
+import JetSelect from './src/Inputs/Select';
 import JetTextarea from './src/Inputs/Textarea';
 import JetImageInput from './src/Inputs/Image';
 import JetFileInput from './src/Inputs/File';
 // pivot
-import JetPivotButton from "./src/Pivot/Button";
-import JetPivotInput from "./src/Pivot/Input";
+import JetPivotButton from './src/Pivot/Button';
+import JetPivotInput from './src/Pivot/Input';
 // mixins
 import Items from './src/Mixins/Items';
 import Connect from './src/Mixins/Connect';
@@ -38,58 +38,54 @@ import ClickOutside from './src/Mixins/ClickOutside';
 import Permissions from './src/Mixins/Permissions';
 import GetRoute from './src/Mixins/GetRoute';
 
-import ConnectedComponents from './src/Classses/ConnectedComponents'
-import DataWrapper from "./src/Classses/DataWrapper";
+import ConnectedComponents from './src/Classses/ConnectedComponents';
+import DataWrapper from './src/Classses/DataWrapper';
 
 import vQuery from '@jetstreamkit/v-query';
 
 export default {
+  install: (app, options) => {
+    app.use(vQuery);
+    app.use(ClickOutside);
+    app.mixin(Permissions);
+    app.provide('$connectedComponents', new ConnectedComponents());
 
-    install: (app, options) => {
-        app.use(vQuery);
-        app.use(ClickOutside);
-        app.mixin(Permissions);
-        app.provide(
-            '$connectedComponents',
-            new ConnectedComponents()
-        );
-
-        app.provide('config', new DataWrapper(options))
-        app.component('jet-pagination', JetPagination)
-        app.component('jet-empty', JetEmpty)
-    }
-}
+    app.provide('config', new DataWrapper(options));
+    app.component('jet-pagination', JetPagination);
+    app.component('jet-empty', JetEmpty);
+  },
+};
 
 export {
-    JetTable,
-    JetGrid,
-    JetList,
-    JetForm,
-    JetDetail,
-    JetFinder,
-    JetTitle,
-    JetTabs,
-    JetDropdown,
-    JetQueryDropdown,
-    JetQueryGroup,
-    JetQueryRange,
-    JetPivotButton,
-    JetPivotInput,
-    JetNotifications,
-    JetPagination,
-    JetTimestamp,
-    JetImageInput,
-    JetFileInput,
-    JetTextarea,
-    JetSelect,
-    JetPicker,
-    // details
-    JetDetailText,
-    // mixins
-    ToggleFilters,
-    ToggleSidebar,
-    Filtering,
-    Connect,
-    GetRoute,
-    Items
-}
+  JetTable,
+  JetGrid,
+  JetList,
+  JetForm,
+  JetDetail,
+  JetFinder,
+  JetTitle,
+  JetTabs,
+  JetDropdown,
+  JetQueryDropdown,
+  JetQueryGroup,
+  JetQueryRange,
+  JetPivotButton,
+  JetPivotInput,
+  JetNotifications,
+  JetPagination,
+  JetTimestamp,
+  JetImageInput,
+  JetFileInput,
+  JetTextarea,
+  JetSelect,
+  JetPicker,
+  // details
+  JetDetailText,
+  // mixins
+  ToggleFilters,
+  ToggleSidebar,
+  Filtering,
+  Connect,
+  GetRoute,
+  Items,
+};

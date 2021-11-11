@@ -13,34 +13,30 @@
           </slot>
         </li>
       </ul>
-        <jet-pagination
-            class="p-5 border-t"
-            :connect="connect"
-            :links="links"
-        />
+      <jet-pagination class="p-5 border-t" :connect="connect" :links="links" />
     </div>
     <div v-else>
-        <slot name="empty">
-            <jet-empty />
-        </slot>
+      <slot name="empty">
+        <jet-empty />
+      </slot>
     </div>
   </div>
 </template>
 
 <script>
-import Items from '../Mixins/Items'
+import Items from '../Mixins/Items';
 
 export default {
-    mixins: [
-        Items
-    ],
-    props: {
-        columns: Number,
+  mixins: [Items],
+  props: {
+    columns: Number,
+  },
+  computed: {
+    grid() {
+      return (
+        ' grid grid-cols-1 sm:grid-cols-' + this.columns + ' gap-x-4 gap-y-8'
+      );
     },
-    computed: {
-      grid() {
-          return ' grid grid-cols-1 sm:grid-cols-'+ this.columns +' gap-x-4 gap-y-8';
-      },
-    }
+  },
 };
 </script>

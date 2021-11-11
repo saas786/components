@@ -1,50 +1,64 @@
 <template>
-    <div v-if="mode === 'none'">{{ value }}</div>
-    <div v-if="mode === 'limit'">
-        <span v-text="value.slice(0, limit)" />
-        <span v-if="open" v-text="value.slice(limit, value.length)" />
-        <span v-if="!open">...</span>
-        <span v-if="value.length > limit" class="ml-3">
-            <button v-if="!open" @click="open = true" class="font-bold hover:underline">More</button>
-            <button v-if="open" @click="open = false" class="font-bold hover:underline">Less</button>
-        </span>
+  <div v-if="mode === 'none'">{{ value }}</div>
+  <div v-if="mode === 'limit'">
+    <span v-text="value.slice(0, limit)" />
+    <span v-if="open" v-text="value.slice(limit, value.length)" />
+    <span v-if="!open">...</span>
+    <span v-if="value.length > limit" class="ml-3">
+      <button
+        v-if="!open"
+        @click="open = true"
+        class="font-bold hover:underline"
+      >
+        More
+      </button>
+      <button
+        v-if="open"
+        @click="open = false"
+        class="font-bold hover:underline"
+      >
+        Less
+      </button>
+    </span>
+  </div>
+  <div v-if="mode === 'modal'">
+    <div class="hover:underline font-bold cursor-pointer" @click="open = true">
+      {{ triggerText }}
     </div>
-    <div v-if="mode === 'modal'">
-        <div class="hover:underline font-bold cursor-pointer" @click="open = true">{{ triggerText }}</div>
-        <modal :show="open" @close="open = false">
-            <div class="p-10">
-                {{ value }}
-            </div>
-        </modal>
-    </div>
+    <modal :show="open" @close="open = false">
+      <div class="p-10">
+        {{ value }}
+      </div>
+    </modal>
+  </div>
 </template>
 
 <script>
-import Modal from '@/Jetstream/Modal'
+import Modal from '@/Jetstream/Modal';
 
 export default {
-    components: {
-        Modal,
+  components: {
+    Modal,
+  },
+  props: {
+    value: String,
+    mode: {
+      type: String,
+      default: 'none',
     },
-    props: {
-        value: String,
-        mode: {
-            type: String,
-            default: 'none'
-        },
-        triggerText: {
-            type: String,
-            default: 'View'
-        },
-        limit: {
-            type: Number,
-            default: 45,
-        }
+    triggerText: {
+      type: String,
+      default: 'View',
     },
-    data() {
-        return {
-            open: false
-        }
-    }
-}
+    limit: {
+      type: Number,
+      default: 45,
+    },
+  },
+  data() {
+    return {
+      open: false,
+    };
+  },
+};
 </script>

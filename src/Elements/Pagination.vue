@@ -1,10 +1,7 @@
 <template>
   <div v-if="links && links.length > 3">
     <div class="flex flex-wrap -mb-1">
-      <template
-        v-for="(link, key) in links"
-        :key="key"
-      >
+      <template v-for="(link, key) in links" :key="key">
         <div
           v-if="link.url === null"
           class="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded"
@@ -24,22 +21,22 @@
 </template>
 
 <script>
-import Connect from "../Mixins/Connect";
+import Connect from '../Mixins/Connect';
 
 export default {
-    mixins:  [Connect],
-    props: {
-        links: Array,
-    },
-    methods: {
-        visit(url) {
-          if (this.connect) {
-            this.connectChanged('updateUrl', url)
-            return;
-          }
+  mixins: [Connect],
+  props: {
+    links: Array,
+  },
+  methods: {
+    visit(url) {
+      if (this.connect) {
+        this.connectChanged('updateUrl', url);
+        return;
+      }
 
-          this.$inertia.visit(url);
-        },
+      this.$inertia.visit(url);
     },
+  },
 };
 </script>

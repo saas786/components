@@ -1,7 +1,12 @@
 <template>
-  <div v-if="title || $slots.title || $slots.aside" class="flex justify-between items-center pb-6">
-    <h2 class="flex-1 font-semibold tracking-wider text-xl text-gray-700 leading-tight">
-      <slot name="title" >
+  <div
+    v-if="title || $slots.title || $slots.aside"
+    class="flex justify-between items-center pb-6"
+  >
+    <h2
+      class="flex-1 font-semibold tracking-wider text-xl text-gray-700 leading-tight"
+    >
+      <slot name="title">
         {{ title }}
       </slot>
     </h2>
@@ -12,6 +17,6 @@
 </template>
 <script>
 export default {
-  props: ['title']
-}
+  props: ['title'],
+};
 </script>

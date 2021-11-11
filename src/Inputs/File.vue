@@ -1,48 +1,50 @@
 <template>
-    <div>
-        <div v-if="name">{{ name }}</div>
-        <span @click="$refs.input.click()">
-            <slot name="button">
-                <secondary-button >
-                    {{ name ? 'Replace' : 'Choose' }}
-                </secondary-button>
-            </slot>
-        </span>
-        <input type="file" class="hidden" @input="$emit('update:modelValue', $event.target.files[0])" ref="input">
-    </div>
+  <div>
+    <div v-if="name">{{ name }}</div>
+    <span @click="$refs.input.click()">
+      <slot name="button">
+        <secondary-button>
+          {{ name ? 'Replace' : 'Choose' }}
+        </secondary-button>
+      </slot>
+    </span>
+    <input
+      type="file"
+      class="hidden"
+      @input="$emit('update:modelValue', $event.target.files[0])"
+      ref="input"
+    />
+  </div>
 </template>
 
 <script>
-import SecondaryButton from "./SecondaryButton";
+import SecondaryButton from './SecondaryButton';
 
 export default {
-    components: {SecondaryButton},
+  components: { SecondaryButton },
 
-    props: ['modelValue'],
+  props: ['modelValue'],
 
-    emits: ['update:modelValue'],
+  emits: ['update:modelValue'],
 
-    data() {
-        return {
-            name: null
-        }
-    },
+  data() {
+    return {
+      name: null,
+    };
+  },
 
-    mounted() {
-        this.name = this.modelValue
-            ? 'file.' + this.modelValue.split('.')[1]
-            : '';
+  mounted() {
+    this.name = this.modelValue ? 'file.' + this.modelValue.split('.')[1] : '';
 
-        if(this.modelValue) {
-            this.$emit('update:modelValue', null)
-        }
-    },
-
-    methods: {
-        focus() {
-            this.$refs.input.focus()
-        }
+    if (this.modelValue) {
+      this.$emit('update:modelValue', null);
     }
-}
-</script>
+  },
 
+  methods: {
+    focus() {
+      this.$refs.input.focus();
+    },
+  },
+};
+</script>
