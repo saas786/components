@@ -127,11 +127,11 @@
 </style>
 
 <script>
-import JetButton from '@/Jetstream/Button';
-import JetSecondaryButton from '@/Jetstream/SecondaryButton';
-import JetLabel from '@/Jetstream/Label';
-import JetInput from '@/Jetstream/Input';
-import JetInputError from '@/Jetstream/InputError';
+import JetButton from '@/Jetstream/Button.vue';
+import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
+import JetLabel from '@/Jetstream/Label.vue';
+import JetInput from '@/Jetstream/Input.vue';
+import JetInputError from '@/Jetstream/InputError.vue';
 import Connect from '../Mixins/Connect';
 import Config from '../Mixins/Config';
 
@@ -248,6 +248,7 @@ export default {
           method: this.formMethod.toLowerCase(),
           url: this.action,
           data: this.form,
+          headers: {'Wants-Json': true}
         })
           .then((response) => {
             this.connectChanged('refresh');

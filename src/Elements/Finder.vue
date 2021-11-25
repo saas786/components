@@ -158,12 +158,12 @@
 }
 </style>
 <script>
-import JetInput from '@/Jetstream/Input';
-import JetSelect from '../Inputs/Select';
+import JetInput from '@/Jetstream/Input.vue';
+import JetSelect from '../Inputs/Select.vue';
 import Connect from '../Mixins/Connect';
 import { Inertia } from '@inertiajs/inertia';
-import JetButton from '@/Jetstream/Button';
-import JetSecondaryButton from '@/Jetstream/SecondaryButton';
+import JetButton from '@/Jetstream/Button.vue';
+import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
 
 export default {
   props: {

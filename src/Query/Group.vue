@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import JetInput from '@/Jetstream/Input';
-import JetButton from '@/Jetstream/Button';
-import JetSecondaryButton from '@/Jetstream/SecondaryButton';
+import JetInput from '@/Jetstream/Input.vue';
+import JetButton from '@/Jetstream/Button.vue';
+import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
 
 export default {
   components: {
