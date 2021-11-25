@@ -1,8 +1,15 @@
-- name: Run E2E tests 🧪
-  uses: cypress-io/github-action@v2
-
-- name: Run Component tests 🧪
-  uses: cypress-io/github-action@v2
-  with:
-    install: false
-    command: npm run ci
+name: Cypress
+on: [push]
+jobs:
+  cypress-run:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run E2E tests 🧪
+        uses: cypress-io/github-action@v2
+      - name: Run Component tests 🧪
+        uses: cypress-io/github-action@v2
+        with:
+          install: false
+          command: npm run ci
