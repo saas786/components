@@ -8,6 +8,7 @@ import JetPagination from '../../src/Elements/Pagination.vue'
 import JetEmpty from '../../src/Items/Empty.vue'
 
 const $ = Cypress.$
+
 document.head.appendChild(
   $('<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">')[0]
 )
