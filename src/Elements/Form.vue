@@ -127,6 +127,8 @@
 </style>
 
 <script>
+import { Inertia } from '@inertiajs/inertia'
+import { useForm } from '@inertiajs/inertia-vue3';
 import JetButton from '@/Jetstream/Button.vue';
 import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
 import JetLabel from '@/Jetstream/Label.vue';
@@ -208,7 +210,7 @@ export default {
     if (this.connect) {
       this.form = formValues;
     } else {
-      this.form = this.$inertia.form(formValues);
+      this.form = useForm(formValues);
     }
 
     if (this.formMethod === 'PUT') {
@@ -256,7 +258,7 @@ export default {
           })
           .catch((errors) => {
             if (errors.response && errors.response.status === 401) {
-              this.$inertia.get(window.location);
+                Inertia.get(window.location);
             }
 
             this.errors = errors.response.data.errors;
