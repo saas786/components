@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="submit" class="w-full">
+    <form @submit.prevent="submit" class="w-full" :action="action" :method="formMethod">
       <div v-if="success" class="bg-white p-5 border-b">
         <slot name="success">
           <p class="text-green-700 font-bold text-center">Success!</p>
@@ -14,16 +14,21 @@
           v-for="(field, index) in fieldsFormatted"
           :key="field.name"
           class="py-2"
+          :data-testid="`field-${field.name}`"
           :class="`col-span-${field.span}`"
         >
-          <div v-if="field.divider" class="border-b pb-5"></div>
-          <slot v-else-if="field.section_title" name="section_title">
-            <p
-              class="flex-1 font-semibold tracking-wider text-gray-700 leading-tight pb-4 border-b"
-            >
-              {{ field.section_title }}
-            </p>
+
+          <div v-if="field.divider" data-testid="divider" class="border-b pb-5" />
+
+          <slot v-else-if="field.section_title" name="section_title" :value="field.section_title">
+              <p>Hello WOrld</p>
+                <p
+                    class="flex-1 font-semibold tracking-wider text-gray-700 leading-tight pb-4 border-b"
+                >{{ field.section_title }}</p>
+              <div data-testid="section_title">
+              </div>
           </slot>
+
           <slot
             v-else
             :name="`field.${field.name}.all`"
@@ -35,7 +40,6 @@
             <div>
               <jet-label
                 :for="field.name"
-                class="capitalize"
                 :value="field.label"
               />
 
@@ -60,13 +64,16 @@
                     />
                   </slot>
 
-                  <p v-if="errors && errors.hasOwnProperty(field.name)">
+                  <div data-testid="error" v-if="errors && errors.hasOwnProperty(field.name)">
                     <JetInputError
-                      :message="errors[field.name][0]"
                       v-if="Array.isArray(errors[field.name])"
+                      :message="errors[field.name][0]"
                     />
-                    <JetInputError :message="errors[field.name]" v-else />
-                  </p>
+                    <JetInputError
+                        v-else
+                        :message="errors[field.name]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -85,6 +92,7 @@
               class="mr-3"
               @click="cancel"
               :disabled="form.processing"
+              data-testid="cancel"
               :class="{ 'opacity-25': form.processing }"
             >
               Cancel
@@ -107,24 +115,6 @@
     class="col-span-1 col-span-2 col-span-3 col-span-4 col-span-5 col-span-6 col-span-7 col-span-8 col-span-9 col-span-10 col-span-11 col-span-12"
   ></div>
 </template>
-
-<style scoped>
-::-webkit-input-placeholder {
-  text-transform: capitalize;
-}
-
-:-moz-placeholder {
-  text-transform: capitalize;
-}
-
-::-moz-placeholder {
-  text-transform: capitalize;
-}
-
-:-ms-input-placeholder {
-  text-transform: capitalize;
-}
-</style>
 
 <script>
 import { Inertia } from '@inertiajs/inertia'
@@ -204,7 +194,7 @@ export default {
     this.fieldsFormatted.forEach((field) => {
       formValues[field.name] = formValues.hasOwnProperty(field.name)
         ? formValues[field.name]
-        : null;
+        : field.value;
     });
 
     if (this.connect) {
@@ -219,16 +209,29 @@ export default {
   },
 
   methods: {
+    labelize(label) {
+        return label.replaceAll('_', ' ')
+            .split(' ')
+            .map(word => {
+                return word.charAt(0).toUpperCase() + word.slice(1)
+            }).join(' ')
+    },
     defaultFieldFormat(field) {
-      let output = {
-        name: field,
-        label: field.replaceAll('_', ' '),
-        component: 'jet-input',
-        props: {
-          type: 'text',
-        },
-        span: '12',
-      };
+        if(field.hasOwnProperty('section_title')) {
+            return field + { name: 'section_title' }
+        } else if(field.hasOwnProperty('divider')) {
+            return field + { name: 'divider' }
+        }
+
+        let output = {
+            name: field,
+            label: this.labelize(field),
+            component: 'jet-input',
+            props: {
+              type: 'text',
+            },
+            span: '12',
+        };
 
       let fieldConfig = this.config.get(`fields.${field}`, {});
 
@@ -310,10 +313,20 @@ export default {
       }
 
       this.fields.forEach((field) => {
+
+        if(field.hasOwnProperty('separator')
+            || field.hasOwnProperty('section_title')) {
+            return field + {name: 'section_title'};
+        }
+
         let newField = field;
 
         if (!newField.hasOwnProperty('span')) {
           newField.span = '12';
+        }
+
+        if (!newField.hasOwnProperty('label')) {
+            newField.label = this.labelize(newField.name);
         }
 
         if (!newField.hasOwnProperty('component')) {
