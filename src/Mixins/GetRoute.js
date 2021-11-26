@@ -5,12 +5,8 @@ export default {
     routePrefix: String,
   },
   methods: {
-    getRoute(name, params) {
-        if(!Array.isArray(params)) {
-            params = [params]
-        }
-
-        params = params.filter(Boolean)
+    getRoute(name, resource, parent) {
+        let params = []
 
         if (parent !== null && parent !== undefined) {
             if (typeof parent === 'object') {
