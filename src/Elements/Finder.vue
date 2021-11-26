@@ -244,7 +244,7 @@ export default {
       if (this.connect) {
         this.connectChanged('updateQuery', payload);
       } else {
-        this.$inertia.get(window.location.pathname, payload, {
+        Inertia.get(window.location.pathname, payload, {
           preserveState: true,
         });
       }

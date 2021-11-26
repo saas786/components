@@ -2,7 +2,7 @@ import Finder from './Finder.vue'
 
 describe('Finder Setup', () => {
 
-    it('can search', () => {
+    it.skip('can search', () => {
         cy.mount(<Finder/>)
 
         cy.get('input[name="search"]').type('hello')
@@ -11,7 +11,7 @@ describe('Finder Setup', () => {
         // assert url has ?search=hello
     })
 
-    it('can sort', () => {
+    it.skip('can sort', () => {
         cy.mount(<Finder/>, {
             props: {
                 sort: ['title']
