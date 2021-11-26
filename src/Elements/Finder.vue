@@ -44,6 +44,7 @@
         v-if="sort"
         :options="sortOptions"
         empty="Sort"
+        name="sort"
         v-query:[connect]="update"
       />
 

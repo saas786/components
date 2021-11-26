@@ -264,9 +264,21 @@ describe('Form Buttons', () => {
 })
 
 describe('Form Submit', () => {
-    it.skip('renders success message at the top', () => {})
-    it.skip('renders error message at the top', () => {})
-    it.skip('renders single error message for field', () => {
+
+    it.skip('renders single error message for field when has data.errors', () => {
+        cy.mount(<Form />, {
+            data() {
+                return {
+                    errors: [{title: 'The title field is required.'}]
+                }
+            }
+        })
+
+        cy.get('div[data-testid="error"]').should('have.length', 1)
+        cy.get('div[data-testid="error"]').first().should('have.text', 'The title field is required.')
+    })
+
+    it.skip('renders single error message for field from response', () => {
         cy.intercept('POST', '/users/new', {
             fixture: 'inertia-error-new-user',
             statusCode: 422,
