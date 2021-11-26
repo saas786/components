@@ -2,7 +2,7 @@ import Select from './Select.vue'
 
 describe('Select', () => {
 
-    it.only('has computed options', () => {
+    it.skip('has computed options', () => {
         let wrapper = cy.mount(<Select />, {
             props: {
                 options: ['one', 'two']
