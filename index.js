@@ -7,6 +7,7 @@ import JetEmpty from './src/Items/Empty';
 import JetForm from './src/Elements/Form';
 import JetDetail from './src/Elements/Detail';
 import JetFinder from './src/Elements/Finder';
+import JetSwitch from './src/Elements/Switch';
 import JetTabs from './src/Elements/Tabs';
 import JetTitle from './src/Elements/Title';
 import JetNotifications from './src/Elements/Notifications';
@@ -25,9 +26,6 @@ import JetSelect from './src/Inputs/Select';
 import JetTextarea from './src/Inputs/Textarea';
 import JetImageInput from './src/Inputs/Image';
 import JetFileInput from './src/Inputs/File';
-// pivot
-import JetPivotButton from './src/Pivot/Button';
-import JetPivotInput from './src/Pivot/Input';
 // mixins
 import Items from './src/Mixins/Items';
 import Connect from './src/Mixins/Connect';
@@ -63,14 +61,13 @@ export {
   JetForm,
   JetDetail,
   JetFinder,
+  JetSwitch,
   JetTitle,
   JetTabs,
   JetDropdown,
   JetQueryDropdown,
   JetQueryGroup,
   JetQueryRange,
-  JetPivotButton,
-  JetPivotInput,
   JetNotifications,
   JetPagination,
   JetTimestamp,
