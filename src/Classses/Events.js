@@ -10,6 +10,8 @@ export default class Events {
   }
 
   dispatch(event, payload) {
+    if(!this.events[event]) return;
+
     this.events[event].forEach((callback) => {
       callback(payload);
     });
