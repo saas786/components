@@ -167,23 +167,20 @@ describe('Form Field Extras', () => {
 })
 
 describe('Form Field Slots', () => {
-    it.skip('overrides entire field block via slot', () => {
-
-        // period in slot name is breaking: unknown: Unexpected token
-        // also can we use slot shorthand? #field.title.all="" ?
-
-        // cy.mount(() => (
-        //     <Form>
-        //         <template v-slot:field.title.all="{ form }">
-        //             <span id="test_output" v-text="form.title" />
-        //             <input name="title" v-model="form.title" />
-        //         </template>
-        //     </Form>
-        // ), {
-        //     props: {
-        //         fields: ['title', 'description']
-        //     }
-        // });
+    it('overrides entire field block via slot', () => {
+        cy.mount(<Form />,{
+            props: {
+                fields: ['title', 'description']
+            },
+            slots: {
+                'field.title.all': ({ form }) => (
+                    <div>
+                        <span id="test_output" vText={form.title} />
+                        <input name="title" vModel={form.title} />
+                    </div>
+                )
+            }
+        });
 
         cy.get('form input').should('have.length', 2)
         cy.get('label[for="title"]').should('not.exist')
@@ -194,22 +191,21 @@ describe('Form Field Slots', () => {
         cy.get('span#test_output').should('have.text', 'hello world')
     })
 
-    it.skip('overrides a field block input and keep label & error', () => {
+    it('overrides a field block input and keep label & error', () => {
 
-        // period in slot name is breaking: unknown: Unexpected token
-
-        // cy.mount(() => (
-        //     <Form>
-        //         <template v-slot:field.title="{ form }">
-        //             <span id="test_output" v-text="form.title" />
-        //             <input name="title" v-model="form.title" />
-        //         </template>
-        //     </Form>
-        // ), {
-        //     props: {
-        //         fields: ['title', 'description']
-        //     }
-        // });
+        cy.mount(<Form />,{
+            props: {
+                fields: ['title', 'description']
+            },
+            slots: {
+                'field.title': ({ form }) => (
+                    <div>
+                        <span id="test_output" vText={form.title} />
+                        <input name="title" vModel={form.title} />
+                    </div>
+                )
+            }
+        });
 
         cy.get('form input').should('have.length', 2)
         cy.get('label[for="title"]').should('contain.text', 'Title')
@@ -249,15 +245,8 @@ describe('Form Buttons', () => {
         cy.get('button[data-testid="cancel"]').should('not.exist')
     })
 
-    it.skip('cancel button exists when form has cancel listener', () => {
-
-        // the cancel handler should add onCancel to $attrs which displays button
-
-        cy.mount(<Form />, {
-            listeners: {
-                cancel: () => {}
-            }
-        })
+    it('cancel button exists when form has cancel listener', () => {
+        cy.mount(<Form onCancel={()=> {}}/>)
 
         cy.get('button[data-testid="cancel"]').should('exist')
     })
