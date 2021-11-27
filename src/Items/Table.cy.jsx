@@ -30,40 +30,38 @@ describe('Table cells', () => {
 })
 
 describe('Table cell slots', () => {
-    it.skip('with td override', () => {
-        // cy.mount(() => (
-        //     <Table>
-        //         <template #td.title="{ item, value: title }">
-        //             <span id="title_slot">{{ title }}</span>
-        //         </template>
-        //     </Table>
-        // ), {
-        //     props: {
-        //         data: [{title: 'Titanic', description: 'a movie'}],
-        //         cells: ['title', 'description']
-        //     }
-        // })
+    it('with td override', () => {
+        cy.mount(<Table/>, {
+            props: {
+                data: [{title: 'Titanic', description: 'a movie'}],
+                cells: ['title', 'description']
+            },
+            slots: {
+                'td.title': ({ form }) => (
+                    <span id="title_slot">Titanic 2</span>
+                )
+            }
+        })
 
-        cy.get('#title_slot').should('have.text', 'Titanic')
+        cy.get('td').eq(0).should('have.text', 'Titanic 2')
     })
 
-    it.skip('with th override', () => {
-        // cy.mount(() => (
-        //     <Table>
-        //         <template #th.title>
-        //             <span>Custom Header</span>
-        //         </template>
-        //     </Table>
-        // ), {
-        //     props: {
-        //         data: [{title: 'Titanic', description: 'a movie'}],
-        //         cells: ['title', 'description']
-        //     }
-        // })
+    it('with th override', () => {
+        cy.mount(<Table/>, {
+            props: {
+                data: [{title: 'Titanic', description: 'a movie'}],
+                cells: ['title', 'description']
+            },
+            slots: {
+                'th.title': ({ form }) => (
+                    <span id="title_slot">Custom Title</span>
+                )
+            }
+        })
 
         cy.get('th').should('have.length', 2)
-        cy.get('th').eq(0).should('have.text', 'Custom Header')
-        cy.get('th').eq(1).should('have.text', 'Description')
+        cy.get('th').eq(0).should('have.text', 'Custom Title')
+        cy.get('th').eq(1).should('have.text', 'description')
     })
 })
 
