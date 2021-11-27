@@ -3,12 +3,12 @@ import Table from './Table.vue'
 describe('Table cells', () => {
 
     it('with cells as an array', () => {
-        cy.mount(<Table/>, {
-            props: {
-                data: [{title: 'Titanic', description: 'a movie'}],
-                cells: ['title', 'description']
-            }
-        })
+        cy.mount(
+            <Table
+                cells={['title', 'description']}
+                data={[{title: 'Titanic', description: 'a movie'}]}
+            />
+        )
 
         cy.get('th').eq(0).should('have.text', 'title')
         cy.get('th').eq(1).should('have.text', 'description')
@@ -17,12 +17,11 @@ describe('Table cells', () => {
     })
 
     it('with nested cells', () => {
-        cy.mount(<Table/>, {
-            props: {
-                data: [{ user: { name: 'Brian' }}],
-                cells: ['user.name']
-            }
-        })
+        cy.mount(
+            <Table
+                data={[{ user: { name: 'Brian' }}]}
+                cells={['user.name']}
+            />)
 
         cy.get('th').eq(0).should('have.text', 'user')
         cy.get('td').eq(0).should('have.text', 'Brian')
@@ -31,11 +30,11 @@ describe('Table cells', () => {
 
 describe('Table cell slots', () => {
     it('with td override', () => {
-        cy.mount(<Table/>, {
-            props: {
-                data: [{title: 'Titanic', description: 'a movie'}],
-                cells: ['title', 'description']
-            },
+        cy.mount(
+            <Table
+                data={[{title: 'Titanic', description: 'a movie'}]}
+                cells={['title', 'description']}
+            />, {
             slots: {
                 'td.title': ({ form }) => (
                     <span id="title_slot">Titanic 2</span>
@@ -47,11 +46,11 @@ describe('Table cell slots', () => {
     })
 
     it('with th override', () => {
-        cy.mount(<Table/>, {
-            props: {
-                data: [{title: 'Titanic', description: 'a movie'}],
-                cells: ['title', 'description']
-            },
+        cy.mount(
+            <Table
+                data={[{title: 'Titanic', description: 'a movie'}]}
+                cells={['title', 'description']}
+            />, {
             slots: {
                 'th.title': ({ form }) => (
                     <span id="title_slot">Custom Title</span>
