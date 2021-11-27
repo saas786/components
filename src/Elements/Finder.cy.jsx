@@ -2,29 +2,38 @@ import Finder from './Finder.vue'
 
 describe('Finder Setup', () => {
 
-    it.skip('can search', () => {
-        cy.mount(<Finder/>)
-
-        cy.get('input[name="search"]').type('hello')
-
-        // Help please :) how do I
-        // assert url has ?search=hello
+    it('can search', () => {
+        const onSearchSpy = cy.spy().as('onSearchSpy')
+        cy.mount(<Finder onSearch={onSearchSpy}/>)
+        cy.get('input[name="search"]').type('h')
+        cy.get('@onSearchSpy').should('have.been.calledOnceWithExactly', {search: 'h'})
     })
 
-    it.skip('can sort', () => {
-        cy.mount(<Finder/>, {
-            props: {
-                sort: ['title']
-            }
-        })
+    it('can sort ascending', () => {
+        const onSortSpy = cy.spy().as('onSortSpy')
+        cy.mount(<Finder onSort={onSortSpy} sort={['title']}/>)
+        cy.get('select[name="sort"]').select('Title (asc)')
+        cy.get('@onSortSpy').should('have.been.calledOnceWithExactly', { 'sort': 'title'})
+    })
 
-        cy.get('option[data-name="sort"][value="title"]"').should('have.text', 'Title (asc)')
-        cy.get('option[data-name="sort-desc"][value="title"]').should('have.text', 'Title (desc)')
+    it('can sort descending', () => {
+        const onSortSpy = cy.spy().as('onSortSpy')
+        cy.mount(<Finder onSort={onSortSpy} sort={['title']}/>)
+        cy.get('select[name="sort"]').select('Title (desc)')
+        cy.get('@onSortSpy').should('have.been.calledOnceWithExactly', {"sort-desc": "title"})
+    })
 
-        // Help please :) how do I
-        // select index 0
-        // assert url has ?sort=title
-        // select index 1
-        // assert url has ?sort-desc=title
+    it('can view with trashed', () => {
+        const onTrashSpy = cy.spy().as('onTrashSpy')
+        cy.mount(<Finder onTrash={onTrashSpy} trashed={true}/>)
+        cy.get('select[name="trash"]').select('With Trashed')
+        cy.get('@onTrashSpy').should('have.been.calledOnceWithExactly', {"with-deleted": 'true'})
+    })
+
+    it('can view only trashed', () => {
+        const onTrashSpy = cy.spy().as('onTrashSpy')
+        cy.mount(<Finder onTrash={onTrashSpy} trashed={true}/>)
+        cy.get('select[name="trash"]').select('Only Trashed')
+        cy.get('@onTrashSpy').should('have.been.calledOnceWithExactly', {"only-deleted": 'true'})
     })
 })
