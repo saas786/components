@@ -55,7 +55,7 @@
                                             :name="field.name"
                                             :placeholder="field.label"
                                             class="w-full"
-                                            v-model="form[field.name]"
+                                            v-model="formValues[field.name]"
                                             :disabled="form.processing"
                                             autocomplete="new-password"
                                             :class="{ disabled: form.processing }"
@@ -144,7 +144,7 @@ export default {
             type: String,
             default: 'new-password',
         },
-        formHandler: {
+        handler: {
             type: Object
         },
         exclude: {
@@ -176,16 +176,43 @@ export default {
             form: null,
             success: false,
             formMethod: null,
+            formValues: {},
             errors: null,
         };
     },
     beforeMount() {
-        this.setFormMethod();
-        let values = this.getInitialFormValues()
-        this.setForm(values);
+        this.setupForm();
     },
 
     methods: {
+        setupForm() {
+            this.setFormMethod();
+
+            let values = this.getInitialFormValues()
+
+            this.formValues = values;
+
+            if(this.handler) {
+                this.form = this.handler
+            } else if (this.connect) {
+                this.form = values;
+            } else {
+                this.form = useForm(values);
+            }
+
+            if (this.formMethod === 'PUT') {
+                this.form._method = 'put';
+            }
+        },
+        setFormMethod() {
+            if (this.method) {
+                this.formMethod = this.method;
+            } else if(this.values && Object.keys(this.values).length !== 0) {
+                this.formMethod = 'PUT'
+            } else {
+                this.formMethod = 'POST'
+            }
+        },
         getInitialFormValues() {
             let values = {};
 
@@ -200,27 +227,6 @@ export default {
             });
 
             return values;
-        },
-        setFormMethod() {
-            if (this.method) {
-                this.formMethod = this.method;
-            } else {
-                this.formMethod = (this.values
-                    && Object.keys(this.values).length !== 0
-                    && !this.method) ? 'PUT' : 'POST';
-            }
-        },
-        setForm(values) {
-            if (this.connect) {
-                this.form = values;
-            } else if(!this.formHandler) {
-                this.form = useForm(values);
-            } else {
-                this.form = this.formHandler
-            }
-            if (this.formMethod === 'PUT') {
-                this.form._method = 'put';
-            }
         },
         labelize(label) {
             return label.replaceAll('_', ' ')
@@ -255,39 +261,48 @@ export default {
             this.success = false;
             this.errors = null;
 
-            if (this.connect) {
-                this.makeAxiosRequest()
+            if(this.handler || this.connect) {
+                this.makeRequest()
             } else {
                 this.makeInertiaRequest();
             }
         },
-        makeAxiosRequest() {
-            axios({
-                method: this.formMethod.toLowerCase(),
+        makeRequest() {
+            let handler = (this.handler) ? this.handler : axios
+
+            handler.request({
                 url: this.action,
-                data: this.form,
+                data: this.deproxy(this.formValues),
+                method: this.formMethod.toLowerCase(),
                 headers: {'Wants-Json': true}
             }).then((response) => {
                 this.connectChanged('refresh');
                 this.$emit('success', response.data);
-            }).catch((errors) => {
+            }).catch(errors => {
+                // 401 means user is not logged in / should be redirected
+                // going to the same location will redirect to login
+                // but retain the redirect back after logging in
                 if (errors.response && errors.response.status === 401) {
                     Inertia.get(window.location);
                 }
+
                 this.errors = errors.response.data.errors;
-            });
+
+                this.$emit('errors', errors.response.data.errors)
+            })
         },
         makeInertiaRequest() {
-
-            this.form.submit(this.formMethod.toLowerCase(), this.action, {
-                preserveScroll: true,
-                onError: () => {
-                    this.errors = this.$page.props.errors;
-                },
-                onSuccess: () => {
-                    this.success = true;
-                    this.form.reset();
-                },
+            this.form
+                .transform(() => this.formValues)
+                .submit(this.formMethod.toLowerCase(), this.action, {
+                    preserveScroll: true,
+                    onError: () => {
+                        this.errors = this.$page.props.errors;
+                    },
+                    onSuccess: () => {
+                        this.success = true;
+                        this.form.reset();
+                    },
             });
         },
         getError(name) {
@@ -301,6 +316,9 @@ export default {
             }
 
             return null;
+        },
+        deproxy(object) {
+            return JSON.parse(JSON.stringify(object));
         },
         addFieldMissing(field) {
             if(field.hasOwnProperty('divider')) {
@@ -336,20 +354,18 @@ export default {
             return this.$attrs && this.$attrs.onCancel;
         },
         fieldsFormatted() {
-
             if (this.fields.length === 0) {
                 return [];
-            }
-
-            if (typeof this.fields[0] === 'string') {
+            } else if (typeof this.fields[0] === 'string') {
                 return this.fields.map((field) => {
                     return this.defaultFieldFormat(field);
                 });
+            } else {
+                return this.fields.map((field) => {
+                    return this.addFieldMissing(field);
+                });
             }
 
-            return this.fields.map((field) => {
-                return this.addFieldMissing(field);
-            });
         },
     },
 };
