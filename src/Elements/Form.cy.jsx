@@ -254,50 +254,58 @@ describe('Form Buttons', () => {
 
 describe('Form Submit', () => {
 
-    it.skip('renders single error message for field when has data.errors', () => {
-        cy.mount(<Form />, {
-            data() {
-                return {
-                    errors: [{title: 'The title field is required.'}]
-                }
+    it('submits successfully', () => {
+
+        let handler = {
+            request(request) {
+                return new Promise( (resolutionFunc, rejectionFunc) => {
+                    resolutionFunc({
+                        data: {
+                            message: "Mocked handler worked",
+                            url: request.url,
+                            method: request.method,
+                            data: {
+                                title: request.data.title,
+                                description: request.data.description,
+                            }
+                        }
+                    });
+                });
             }
-        })
+        }
 
-        cy.get('div[data-testid="error"]').should('have.length', 1)
-        cy.get('div[data-testid="error"]').first().should('have.text', 'The title field is required.')
-    })
+        let onSuccessSpy = cy.spy().as('onSuccessSpy')
 
-    it.skip('renders single error message for field from response', () => {
-        cy.intercept('POST', '/users/new', {
-            fixture: 'inertia-error-new-user',
-            statusCode: 422,
-            headers: {
-                'Vary': 'Accept',
-                'X-Inertia': 'true',
-            }
-        }).as('formSubmit')
+        cy.mount(
+            <Form
+                action="/movies/new"
+                fields={['title', 'description']}
+                handler={handler}
+                onSuccess={onSuccessSpy}
+            />
+        )
 
-        cy.mount(<Form />, {
-            props: {
-                action: '/users/new',
-                fields: ['title', 'description'],
-                formHandler: {
-                    processing: false,
-                    submit() {
-                      //
-                    },
-                    reset() {
-                        //
-                    }
-                }
-            }
-        })
-
+        cy.get('input[name="title"]').type('Titanic')
+        cy.get('input[name="description"]').type('row row your boat')
         cy.get('button[type="submit"]').click()
 
-        cy.wait('@formSubmit').then((interception) => {
-            cy.get('div[data-testid="error"]').should('have.length', 1)
-            cy.get('div[data-testid="error"]').first().should('have.text', 'The title field is required.')
+        cy.get("@onSuccessSpy").should('have.been.calledWith', {
+            message: "Mocked handler worked",
+            url: '/movies/new',
+            method: 'post',
+            data: {
+                title: 'Titanic',
+                description: 'row row your boat',
+            }
         })
+    })
+
+    it.skip('renders single error message for field', () => {
+        cy.get('div[data-testid="error"]').should('have.length', 1)
+        cy.get('div[data-testid="error"]').first().should('have.text', 'The title field is required.')
+        // cy.wait('@formSubmit').then((interception) => {
+        //     cy.get('div[data-testid="error"]').should('have.length', 1)
+        //     cy.get('div[data-testid="error"]').first().should('have.text', 'The title field is required.')
+        // })
     })
 })
