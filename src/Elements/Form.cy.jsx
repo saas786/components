@@ -173,10 +173,10 @@ describe('Form Field Slots', () => {
                 fields: ['title', 'description']
             },
             slots: {
-                'field.title.all': ({form}) => (
+                'field.title.all': ({values}) => (
                     <div>
-                        <span id="test_output" vText={form.title}/>
-                        <input name="title" vModel={form.title}/>
+                        <span id="test_output" vText={values.title}/>
+                        <input name="title" vModel={values.title}/>
                     </div>
                 )
             }
@@ -198,10 +198,10 @@ describe('Form Field Slots', () => {
                 fields: ['title', 'description']
             },
             slots: {
-                'field.title': ({form}) => (
+                'field.title': ({values}) => (
                     <div>
-                        <span id="test_output" vText={form.title}/>
-                        <input name="title" vModel={form.title}/>
+                        <span id="test_output" vText={values.title}/>
+                        <input name="title" vModel={values.title}/>
                     </div>
                 )
             }

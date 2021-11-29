@@ -263,10 +263,11 @@ export default {
                     'Show-Redirect-Url': true,
                 }
             }).then((response) => {
-                if (this.connect) {
-                    this.connectChanged('refresh');
+                this.reset()
+                if(this.$attrs.onSuccess) {
                     this.$emit('success', response.data);
-                    this.reset()
+                } else if (this.connect) {
+                    this.connectChanged('refresh');
                 } else {
                     Inertia.get(response.data.url)
                 }
