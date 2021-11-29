@@ -264,12 +264,13 @@ export default {
                 }
             }).then((response) => {
                 this.reset()
-                if(this.$attrs.onSuccess) {
-                    this.$emit('success', response.data);
-                } else if (this.connect) {
+
+                this.$emit('success', response.data);
+
+                if (this.connect) {
                     this.connectChanged('refresh');
                 } else {
-                    Inertia.get(response.data.url)
+                    this.$inertia.get(response.data.url)
                 }
 
             }).catch(errors => {
@@ -277,7 +278,7 @@ export default {
                 // going to the same location will redirect to login
                 // but retain the redirect back after logging in
                 if (errors.response && errors.response.status === 401) {
-                    Inertia.get(window.location);
+                    this.$inertia.get(window.location);
                 }
 
                 this.errors = errors.response.data.errors;

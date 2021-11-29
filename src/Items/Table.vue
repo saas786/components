@@ -24,6 +24,7 @@
                         v-for="cell in cellsFormatted"
                         class="px-6 py-4"
                         @click="visit(item)"
+                        :data-testid="`td-${cell.testid}`"
                     >
                         <slot
                             :index="index"
@@ -78,6 +79,7 @@ export default {
             output.push({
                 path: cell,
                 name: column,
+                testid: display,
                 display: display.replace('_', ' '),
             });
         });

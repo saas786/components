@@ -56,6 +56,7 @@
           'bg-white': !isFiltering,
         }"
                 class="select rounded-md border border-gray-300 cursor-pointer"
+                data-testid="jet-finder-filter-trigger"
                 @click="filtering = true"
             >
         Filters
@@ -121,15 +122,20 @@
                                         aria-hidden="true"
                                         class="h-full flex justify-between flex-col"
                                     >
-                                        <div class="flex-1 overflow-auto">
+                                        <div data-testid="jet-finder-filters" class="flex-1 overflow-auto">
                                             <slot :filters="filterValues" name="filters"/>
                                         </div>
                                         <div class="flex space-x-4 pb-8 pt-4 border-t mt-4">
-                                            <jet-button @click="filterHandler">Filter</jet-button>
-                                            <jet-secondary-button @click="clearFilters"
-                                            >Clear
-                                            </jet-secondary-button
-                                            >
+                                            <jet-button
+                                                @click="filterHandler"
+                                                data-testid="jet-finder-filters-submit">
+                                                Filter
+                                            </jet-button>
+                                            <jet-secondary-button
+                                                @click="clearFilters"
+                                                data-testid="jet-finder-filters-clear">
+                                                Clear
+                                            </jet-secondary-button>
                                         </div>
                                     </div>
                                 </div>
