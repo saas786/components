@@ -14,6 +14,7 @@ import JetNotifications from './src/Elements/Notifications';
 import JetPagination from './src/Elements/Pagination';
 import JetDropdown from './src/Elements/Dropdown';
 import JetTimestamp from './src/Elements/Timestamp';
+import JetFlash from './src/Elements/Flash';
 // query
 import JetQueryDropdown from './src/Query/Dropdown';
 import JetQueryGroup from './src/Query/Group';
@@ -71,6 +72,7 @@ export {
     JetNotifications,
     JetPagination,
     JetTimestamp,
+    JetFlash,
     JetImageInput,
     JetFileInput,
     JetTextarea,
