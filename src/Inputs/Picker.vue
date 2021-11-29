@@ -6,6 +6,7 @@
         type="text"
         :value="buttonText"
         :disabled="isDisabled"
+        :data-testid="`jet-picker-${name}`"
         class="w-full select-none cursor-pointer caret-transparent"
         :class="{ 'bg-gray-50 cursor-not-allowed': isDisabled }"
       />
@@ -30,15 +31,17 @@
     </div>
 
     <jet-modal :show="isPicking" @close="isPicking = false" max-width="lg">
-      <jet-finder :connect="`picker-${name}`" />
+        <div :data-testid="`jet-picker-modal-${name}`">
+              <jet-finder :connect="`picker-${name}`" />
 
-      <jet-list
-        :connect="`picker-${name}`"
-        :items-path="itemsPath"
-        :item-display="itemDisplay"
-        :url="url"
-        :click="pick"
-      />
+              <jet-list
+                :connect="`picker-${name}`"
+                :items-path="itemsPath"
+                :item-display="itemDisplay"
+                :url="url"
+                :click="pick"
+              />
+        </div>
     </jet-modal>
   </div>
 </template>

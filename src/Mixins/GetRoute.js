@@ -29,7 +29,7 @@ export default {
       if(this.routePrefix) {
           routeName = this.routePrefix + '.' + routeName;
       } else if (this.config.has('route_name_prefix')) {
-          routeName = this.config.get('route_name_prefix') + '.' + routeName
+          routeName = this.config.get('route_name_prefix') + routeName
       }
 
       return route(routeName, params);

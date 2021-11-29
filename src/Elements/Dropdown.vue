@@ -1,11 +1,11 @@
 <template>
-  <div class="relative" v-click-outside="close">
-    <div @click="toggle" ref="trigger">
+  <div data-testid="jet-dropdown" class="relative" v-click-outside="close">
+    <div @click="toggle" ref="trigger" data-testid="jet-dropdown-trigger">
       <slot name="trigger"></slot>
     </div>
 
     <teleport to="body">
-      <div v-show="open" class="absolute top-0 left-0">
+      <div v-show="open" class="absolute top-0 left-0" data-testid="jet-dropdown-content">
         <div
           ref="content"
           class="relative mt-1 rounded-md shadow-lg"

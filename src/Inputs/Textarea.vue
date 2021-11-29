@@ -1,9 +1,9 @@
 <template>
   <div>
     <textarea
-      :rows="rows"
-      :placeholder="placeholder"
+      v-bind="$attrs"
       @input="update"
+      :placeholder="placeholder"
       :class="{ 'resize-none': !resize }"
       class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
       v-text="modelValue"

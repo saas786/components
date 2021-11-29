@@ -1,17 +1,17 @@
 <template>
-  <div class="border-gray-200 px-4 py-5 sm:p-0">
+  <div data-testid="jet-detail" class="border-gray-200 px-4 py-5 sm:p-0">
     <dl class="sm:divide-y sm:divide-gray-200">
       <div
         v-for="item in valuesFormatted"
         class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
       >
         <slot :name="`row.${item.key}`" :value="item.value">
-          <dt class="capitalize text-sm font-medium text-gray-500">
+          <dt :data-testid="`jet-detail-key-${item.key}`" class="capitalize text-sm font-medium text-gray-500">
             <slot :name="`item.key.${item.key}`" :value="item.value">
               {{ item.display }}
             </slot>
           </dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+          <dd :data-testid="`jet-detail-value-${item.key}`" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
             <slot :name="`value.${item.key}`" :value="item.value">
               <component
                 :is="item.component"

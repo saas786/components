@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div data-testid="jet-form">
         <form @submit.prevent="submit" class="w-full" :action="action" :method="formMethod">
             <div v-if="success" class="bg-white p-5 border-b">
                 <slot name="success">
@@ -33,8 +33,8 @@
                         :name="`field.${field.name}.all`"
                         :errors="errors"
                         :error="getError(field.name)"
+                        :values="formValues"
                         :index="index"
-                        :form="form"
                     >
                         <div>
                             <jet-label
@@ -47,7 +47,7 @@
                                     <slot
                                         :name="`field.${field.name}`"
                                         :index="index"
-                                        :form="form"
+                                        :values="formValues"
                                     >
                                         <component
                                             :is="field.component"
@@ -56,9 +56,9 @@
                                             :placeholder="field.label"
                                             class="w-full"
                                             v-model="formValues[field.name]"
-                                            :disabled="form.processing"
+                                            :disabled="processing"
                                             autocomplete="new-password"
-                                            :class="{ disabled: form.processing }"
+                                            :class="{ disabled: processing }"
                                             v-bind="field.props"
                                         />
                                     </slot>
@@ -85,24 +85,23 @@
                 <div class="border-t p-5 flex justify-end rounded-b">
                     <slot
                         name="cancel"
-                        :form="form"
                         :cancel="cancel"
                         v-if="hasCancelListener"
                     >
                         <jet-secondary-button
                             class="mr-3"
                             @click="cancel"
-                            :disabled="form.processing"
+                            :disabled="processing"
                             data-testid="cancel"
-                            :class="{ 'opacity-25': form.processing }"
+                            :class="{ 'opacity-25': processing }"
                         >
                             Cancel
                         </jet-secondary-button>
                     </slot>
-                    <slot name="submit" :form="form" :submit="submit">
+                    <slot name="submit" :submit="submit">
                         <jet-button
-                            :disabled="form.processing"
-                            :class="{ 'opacity-25': form.processing }"
+                            :disabled="processing"
+                            :class="{ 'opacity-25': processing }"
                         >
                             {{ formMethod === 'POST' ? 'Create' : 'Update' }}
                         </jet-button>
@@ -119,7 +118,6 @@
 
 <script>
 import { Inertia } from '@inertiajs/inertia'
-import { useForm } from '@inertiajs/inertia-vue3';
 import JetButton from '@/Jetstream/Button.vue';
 import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
 import JetLabel from '@/Jetstream/Label.vue';
@@ -173,47 +171,30 @@ export default {
     },
     data() {
         return {
-            form: null,
             success: false,
+            processing: false,
             formMethod: null,
             formValues: {},
             errors: null,
         };
     },
     beforeMount() {
-        this.setupForm();
+        this.initFormValues();
+        this.initFormMethod();
     },
 
     methods: {
-        setupForm() {
-            this.setFormMethod();
-
-            let values = this.getInitialFormValues()
-
-            this.formValues = values;
-
-            if(this.handler) {
-                this.form = this.handler
-            } else if (this.connect) {
-                this.form = values;
-            } else {
-                this.form = useForm(values);
-            }
-
-            if (this.formMethod === 'PUT') {
-                this.form._method = 'put';
-            }
-        },
-        setFormMethod() {
+        initFormMethod() {
             if (this.method) {
                 this.formMethod = this.method;
             } else if(this.values && Object.keys(this.values).length !== 0) {
                 this.formMethod = 'PUT'
+                this.formValues._method = 'put';
             } else {
                 this.formMethod = 'POST'
             }
         },
-        getInitialFormValues() {
+        initFormValues() {
             let values = {};
 
             if (this.values) {
@@ -226,7 +207,7 @@ export default {
                     : field.value;
             });
 
-            return values;
+            this.formValues = values;
         },
         labelize(label) {
             return label.replaceAll('_', ' ')
@@ -260,12 +241,16 @@ export default {
         submit() {
             this.success = false;
             this.errors = null;
-
-            if(this.handler || this.connect) {
-                this.makeRequest()
-            } else {
-                this.makeInertiaRequest();
+            this.makeRequest()
+        },
+        reset() {
+            if(this.formMethod !== 'post') {
+                return;
             }
+
+            Object.keys(this.formValues).forEach(key => {
+                this.formValues[key] = null
+            })
         },
         makeRequest() {
             let handler = (this.handler) ? this.handler : axios
@@ -274,10 +259,18 @@ export default {
                 url: this.action,
                 data: this.deproxy(this.formValues),
                 method: this.formMethod.toLowerCase(),
-                headers: {'Wants-Json': true}
+                headers: {
+                    'Show-Redirect-Url': true,
+                }
             }).then((response) => {
-                this.connectChanged('refresh');
-                this.$emit('success', response.data);
+                if(this.connect)  {
+                    this.connectChanged('refresh');
+                    this.$emit('success', response.data);
+                    this.reset()
+                } else {
+                    Inertia.get(response.data.url)
+                }
+
             }).catch(errors => {
                 // 401 means user is not logged in / should be redirected
                 // going to the same location will redirect to login
@@ -290,20 +283,6 @@ export default {
 
                 this.$emit('errors', errors.response.data.errors)
             })
-        },
-        makeInertiaRequest() {
-            this.form
-                .transform(() => this.formValues)
-                .submit(this.formMethod.toLowerCase(), this.action, {
-                    preserveScroll: true,
-                    onError: () => {
-                        this.errors = this.$page.props.errors;
-                    },
-                    onSuccess: () => {
-                        this.success = true;
-                        this.form.reset();
-                    },
-            });
         },
         getError(name) {
             // todo: normalize the errors array instead

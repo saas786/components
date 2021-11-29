@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-auto">
+  <div data-testid="jet-table" class="overflow-auto">
     <div v-if="items.length > 0">
       <table class="whitespace-nowrap w-full" cellspacing="0" cellpadding="0">
         <thead>
