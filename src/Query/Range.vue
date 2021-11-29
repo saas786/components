@@ -1,11 +1,11 @@
 <template>
-  <div class="text-center">
+    <div class="text-center">
     <span ref="button">
       <jet-secondary-button
-        class="uppercase"
-        @click="toggle"
-        v-click-outside="close"
-        :data-open="open"
+          v-click-outside="close"
+          :data-open="open"
+          class="uppercase"
+          @click="toggle"
       >
         <template v-if="empty">
           {{ plural }}
@@ -23,132 +23,132 @@
         </template>
       </jet-secondary-button>
     </span>
-    <div class="relative">
-      <div
-        v-show="open"
-        class="p-4 bg-white shadow rounded absolute"
-        ref="dropdown"
-      >
-        <div class="flex justify-center items-center space-x-1">
-          <input
-            v-query
-            @click.stop
-            :name="`${name}:min`"
-            :class="inputClasses"
-            placeholder="min"
-            :type="type"
-          />
-          <span>-</span>
-          <input
-            v-query
-            @click.stop
-            :name="`${name}:max`"
-            :class="inputClasses"
-            placeholder="max"
-            :type="type"
-          />
+        <div class="relative">
+            <div
+                v-show="open"
+                ref="dropdown"
+                class="p-4 bg-white shadow rounded absolute"
+            >
+                <div class="flex justify-center items-center space-x-1">
+                    <input
+                        v-query
+                        :class="inputClasses"
+                        :name="`${name}:min`"
+                        :type="type"
+                        placeholder="min"
+                        @click.stop
+                    />
+                    <span>-</span>
+                    <input
+                        v-query
+                        :class="inputClasses"
+                        :name="`${name}:max`"
+                        :type="type"
+                        placeholder="max"
+                        @click.stop
+                    />
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
-import { Inertia } from '@inertiajs/inertia';
+import {Inertia} from '@inertiajs/inertia';
 
 export default {
-  props: {
-    type: {
-      type: String,
-    },
-    name: {
-      type: String,
-    },
-    single: {
-      type: String,
-    },
-    plural: {
-      type: String,
-    },
-    inputClasses: {
-      type: String,
-      default:
-        'w-40 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm p-2 mb-2 border',
-    },
-  },
-
-  components: {
-    JetSecondaryButton,
-  },
-
-  data() {
-    return {
-      open: false,
-      query: {},
-    };
-  },
-
-  created() {
-    this.updateQuery();
-
-    Inertia.on('navigate', (event) => {
-      this.updateQuery();
-      this.offsetDropdown();
-    });
-  },
-
-  methods: {
-    updateQuery() {
-      this.query = new URLSearchParams(window.location.search);
+    props: {
+        type: {
+            type: String,
+        },
+        name: {
+            type: String,
+        },
+        single: {
+            type: String,
+        },
+        plural: {
+            type: String,
+        },
+        inputClasses: {
+            type: String,
+            default:
+                'w-40 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm p-2 mb-2 border',
+        },
     },
 
-    toggle() {
-      this.open = !this.open;
-
-      this.offsetDropdown();
+    components: {
+        JetSecondaryButton,
     },
 
-    close() {
-      this.open = false;
+    data() {
+        return {
+            open: false,
+            query: {},
+        };
     },
 
-    offsetDropdown() {
-      this.$nextTick(() => {
-        let buttonOffset = this.$refs.button.offsetWidth / 2;
+    created() {
+        this.updateQuery();
 
-        this.$refs.dropdown.style.left =
-          -(this.$refs.dropdown.offsetWidth / 2) + buttonOffset + 'px';
-      });
-    },
-  },
-  computed: {
-    empty() {
-      return (
-        !this.query.get(`${this.name}:min`) &&
-        !this.query.get(`${this.name}:max`)
-      );
+        Inertia.on('navigate', (event) => {
+            this.updateQuery();
+            this.offsetDropdown();
+        });
     },
 
-    pluralMin() {
-      return this.query.get(`${this.name}:min`) === 1
-        ? this.single
-        : this.plural;
-    },
+    methods: {
+        updateQuery() {
+            this.query = new URLSearchParams(window.location.search);
+        },
 
-    pluralMax() {
-      return this.query.get(`${this.name}:max`) === 1
-        ? this.single
-        : this.plural;
-    },
+        toggle() {
+            this.open = !this.open;
 
-    min() {
-      return this.query.get(`${this.name}:min`);
-    },
+            this.offsetDropdown();
+        },
 
-    max() {
-      return this.query.get(`${this.name}:max`);
+        close() {
+            this.open = false;
+        },
+
+        offsetDropdown() {
+            this.$nextTick(() => {
+                let buttonOffset = this.$refs.button.offsetWidth / 2;
+
+                this.$refs.dropdown.style.left =
+                    -(this.$refs.dropdown.offsetWidth / 2) + buttonOffset + 'px';
+            });
+        },
     },
-  },
+    computed: {
+        empty() {
+            return (
+                !this.query.get(`${this.name}:min`) &&
+                !this.query.get(`${this.name}:max`)
+            );
+        },
+
+        pluralMin() {
+            return this.query.get(`${this.name}:min`) === 1
+                ? this.single
+                : this.plural;
+        },
+
+        pluralMax() {
+            return this.query.get(`${this.name}:max`) === 1
+                ? this.single
+                : this.plural;
+        },
+
+        min() {
+            return this.query.get(`${this.name}:min`);
+        },
+
+        max() {
+            return this.query.get(`${this.name}:max`);
+        },
+    },
 };
 </script>

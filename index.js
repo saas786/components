@@ -42,47 +42,47 @@ import DataWrapper from './src/Classses/DataWrapper';
 import vQuery from '@jetstreamkit/v-query';
 
 export default {
-  install: (app, options) => {
-    app.use(vQuery);
-    app.use(ClickOutside);
-    app.mixin(Permissions);
-    app.provide('$connectedComponents', new ConnectedComponents());
+    install: (app, options) => {
+        app.use(vQuery);
+        app.use(ClickOutside);
+        app.mixin(Permissions);
+        app.provide('$connectedComponents', new ConnectedComponents());
 
-    app.provide('config', new DataWrapper(options));
-    app.component('jet-pagination', JetPagination);
-    app.component('jet-empty', JetEmpty);
-  },
+        app.provide('config', new DataWrapper(options));
+        app.component('jet-pagination', JetPagination);
+        app.component('jet-empty', JetEmpty);
+    },
 };
 
 export {
-  JetTable,
-  JetGrid,
-  JetList,
-  JetForm,
-  JetDetail,
-  JetFinder,
-  JetSwitch,
-  JetTitle,
-  JetTabs,
-  JetDropdown,
-  JetQueryDropdown,
-  JetQueryGroup,
-  JetQueryRange,
-  JetNotifications,
-  JetPagination,
-  JetTimestamp,
-  JetImageInput,
-  JetFileInput,
-  JetTextarea,
-  JetSelect,
-  JetPicker,
-  // details
-  JetDetailText,
-  // mixins
-  ToggleFilters,
-  ToggleSidebar,
-  Filtering,
-  Connect,
-  GetRoute,
-  Items,
+    JetTable,
+    JetGrid,
+    JetList,
+    JetForm,
+    JetDetail,
+    JetFinder,
+    JetSwitch,
+    JetTitle,
+    JetTabs,
+    JetDropdown,
+    JetQueryDropdown,
+    JetQueryGroup,
+    JetQueryRange,
+    JetNotifications,
+    JetPagination,
+    JetTimestamp,
+    JetImageInput,
+    JetFileInput,
+    JetTextarea,
+    JetSelect,
+    JetPicker,
+    // details
+    JetDetailText,
+    // mixins
+    ToggleFilters,
+    ToggleSidebar,
+    Filtering,
+    Connect,
+    GetRoute,
+    Items,
 };

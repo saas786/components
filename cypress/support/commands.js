@@ -1,4 +1,4 @@
-import { mount as realMount } from '@cypress/vue'
+import {mount as realMount} from '@cypress/vue'
 import vQuery from '@jetstreamkit/v-query'
 import DataWrapper from '../../src/Classses/DataWrapper'
 import ConnectedComponents from '../../src/Classses/ConnectedComponents'
@@ -10,7 +10,7 @@ import JetEmpty from '../../src/Items/Empty.vue'
 const $ = Cypress.$
 
 document.head.appendChild(
-  $('<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">')[0]
+    $('<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">')[0]
 )
 // ***********************************************
 // This example commands.js shows you how to
@@ -39,16 +39,16 @@ document.head.appendChild(
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('mount', (component, options = {}) => {
-  options.global = options.global || {}
-  options.global.plugins = [ClickOutside, vQuery]
-  options.global.mixins = [Permissions]
-  options.global.components = {
-    JetPagination,
-    JetEmpty,
-  }
-  options.global.provide = {
-    $connectedComponents: new ConnectedComponents(),
-    config: new DataWrapper(options),
-  }
-  return realMount(component, options)
+    options.global = options.global || {}
+    options.global.plugins = [ClickOutside, vQuery]
+    options.global.mixins = [Permissions]
+    options.global.components = {
+        JetPagination,
+        JetEmpty,
+    }
+    options.global.provide = {
+        $connectedComponents: new ConnectedComponents(),
+        config: new DataWrapper(options),
+    }
+    return realMount(component, options)
 })

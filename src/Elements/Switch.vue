@@ -1,5 +1,5 @@
 <template>
-    <button :title="timestamp" :class="classes" @click.stop="submit">
+    <button :class="classes" :title="timestamp" @click.stop="submit">
         <slot v-if="active" name="on">
             {{ on }}
         </slot>

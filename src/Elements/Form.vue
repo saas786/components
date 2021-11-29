@@ -1,6 +1,6 @@
 <template>
     <div data-testid="jet-form">
-        <form @submit.prevent="submit" class="w-full" :action="action" :method="formMethod">
+        <form :action="action" :method="formMethod" class="w-full" @submit.prevent="submit">
             <div v-if="success" class="bg-white p-5 border-b">
                 <slot name="success">
                     <p class="text-green-700 font-bold text-center">Success!</p>
@@ -13,14 +13,14 @@
                 <div
                     v-for="(field, index) in fieldsFormatted"
                     :key="field.name"
-                    class="py-2"
                     :class="`col-span-${field.span}`"
                     :data-testid="`field-${field.name}`"
+                    class="py-2"
                 >
 
-                    <div v-if="field.hasOwnProperty('divider')" class="border-b pb-5" />
+                    <div v-if="field.hasOwnProperty('divider')" class="border-b pb-5"/>
 
-                    <slot v-else-if="field.section_title" name="section_title" :value="field.section_title">
+                    <slot v-else-if="field.section_title" :value="field.section_title" name="section_title">
                         <div>
                             <p class="flex-1 font-semibold tracking-wider text-gray-700 leading-tight pb-4 border-b">
                                 {{ field.section_title }}
@@ -30,11 +30,11 @@
 
                     <slot
                         v-else
-                        :name="`field.${field.name}.all`"
-                        :errors="errors"
                         :error="getError(field.name)"
-                        :values="formValues"
+                        :errors="errors"
                         :index="index"
+                        :name="`field.${field.name}.all`"
+                        :values="formValues"
                     >
                         <div>
                             <jet-label
@@ -45,27 +45,27 @@
                             <div class="mt-1">
                                 <div>
                                     <slot
-                                        :name="`field.${field.name}`"
                                         :index="index"
+                                        :name="`field.${field.name}`"
                                         :values="formValues"
                                     >
                                         <component
                                             :is="field.component"
                                             :id="field.name"
+                                            v-model="formValues[field.name]"
+                                            :class="{ disabled: processing }"
+                                            :disabled="processing"
                                             :name="field.name"
                                             :placeholder="field.label"
-                                            class="w-full"
-                                            v-model="formValues[field.name]"
-                                            :disabled="processing"
                                             autocomplete="new-password"
-                                            :class="{ disabled: processing }"
+                                            class="w-full"
                                             v-bind="field.props"
                                         />
                                     </slot>
 
                                     <!-- TODO: errorsFormatted to avoid multiple formats                    -->
                                     <!-- TODO: fields.title.error slot -->
-                                    <div data-testid="error" v-if="errors && errors.hasOwnProperty(field.name)">
+                                    <div v-if="errors && errors.hasOwnProperty(field.name)" data-testid="error">
                                         <JetInputError
                                             v-if="Array.isArray(errors[field.name])"
                                             :message="errors[field.name][0]"
@@ -84,24 +84,24 @@
             <slot name="footer">
                 <div class="border-t p-5 flex justify-end rounded-b">
                     <slot
-                        name="cancel"
-                        :cancel="cancel"
                         v-if="hasCancelListener"
+                        :cancel="cancel"
+                        name="cancel"
                     >
                         <jet-secondary-button
-                            class="mr-3"
-                            @click="cancel"
-                            :disabled="processing"
-                            data-testid="cancel"
                             :class="{ 'opacity-25': processing }"
+                            :disabled="processing"
+                            class="mr-3"
+                            data-testid="cancel"
+                            @click="cancel"
                         >
                             Cancel
                         </jet-secondary-button>
                     </slot>
-                    <slot name="submit" :submit="submit">
+                    <slot :submit="submit" name="submit">
                         <jet-button
-                            :disabled="processing"
                             :class="{ 'opacity-25': processing }"
+                            :disabled="processing"
                         >
                             {{ formMethod === 'POST' ? 'Create' : 'Update' }}
                         </jet-button>
@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import { Inertia } from '@inertiajs/inertia'
+import {Inertia} from '@inertiajs/inertia'
 import JetButton from '@/Jetstream/Button.vue';
 import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
 import JetLabel from '@/Jetstream/Label.vue';
@@ -187,7 +187,7 @@ export default {
         initFormMethod() {
             if (this.method) {
                 this.formMethod = this.method;
-            } else if(this.values && Object.keys(this.values).length !== 0) {
+            } else if (this.values && Object.keys(this.values).length !== 0) {
                 this.formMethod = 'PUT'
                 this.formValues._method = 'put';
             } else {
@@ -244,7 +244,7 @@ export default {
             this.makeRequest()
         },
         reset() {
-            if(this.formMethod !== 'post') {
+            if (this.formMethod !== 'post') {
                 return;
             }
 
@@ -263,7 +263,7 @@ export default {
                     'Show-Redirect-Url': true,
                 }
             }).then((response) => {
-                if(this.connect)  {
+                if (this.connect) {
                     this.connectChanged('refresh');
                     this.$emit('success', response.data);
                     this.reset()
@@ -300,9 +300,9 @@ export default {
             return JSON.parse(JSON.stringify(object));
         },
         addFieldMissing(field) {
-            if(field.hasOwnProperty('divider')) {
+            if (field.hasOwnProperty('divider')) {
                 return {...field, name: 'divider', span: 12};
-            } else if(field.hasOwnProperty('section_title')) {
+            } else if (field.hasOwnProperty('section_title')) {
                 return {...field, name: 'section_title', span: 12};
             }
 
@@ -322,7 +322,7 @@ export default {
                 !field.hasOwnProperty('props') &&
                 field.component === 'jet-input'
             ) {
-                field.props = { type: 'text' };
+                field.props = {type: 'text'};
             }
 
             return field;

@@ -1,21 +1,21 @@
 import Events from './Events';
 
 export default class ConnectedComponents {
-  connections = {};
+    connections = {};
 
-  register(key) {
-    if (this.connections.hasOwnProperty(key)) {
-      return;
+    register(key) {
+        if (this.connections.hasOwnProperty(key)) {
+            return;
+        }
+
+        this.connections[key] = new Events();
     }
 
-    this.connections[key] = new Events();
-  }
+    for(key) {
+        if (this.connections.hasOwnProperty(key)) {
+            return this.connections[key];
+        }
 
-  for(key) {
-    if (this.connections.hasOwnProperty(key)) {
-      return this.connections[key];
+        return new Events();
     }
-
-    return new Events();
-  }
 }

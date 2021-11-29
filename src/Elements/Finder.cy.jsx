@@ -13,7 +13,7 @@ describe('Finder Setup', () => {
         const onSortSpy = cy.spy().as('onSortSpy')
         cy.mount(<Finder onSort={onSortSpy} sort={['title']}/>)
         cy.get('select[name="sort"]').select('Title (asc)')
-        cy.get('@onSortSpy').should('have.been.calledOnceWithExactly', { 'sort': 'title'})
+        cy.get('@onSortSpy').should('have.been.calledOnceWithExactly', {'sort': 'title'})
     })
 
     it('can sort descending', () => {

@@ -8,71 +8,71 @@
                     >
                         <svg
                             class="h-5 w-5 text-gray-400"
-                            xmlns="http://www.w3.org/2000/svg"
                             fill="none"
-                            viewBox="0 0 24 24"
                             stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
                         >
                             <path
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                             />
                         </svg>
                     </div>
                     <input
-                        autocomplete="off"
-                        v-query:[connect]="searchHandler"
-                        type="text"
-                        name="search"
                         id="search"
+                        v-query:[connect]="searchHandler"
+                        autocomplete="off"
                         class="focus:ring-gray-500 focus:border-gray-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                        name="search"
                         placeholder="Search"
+                        type="text"
                     />
                 </div>
             </div>
 
             <jet-select
                 v-if="trashed"
-                :options="trashOptions"
-                name="trash"
-                empty="Not Trashed"
                 v-query:[connect]="trashHandler"
+                :options="trashOptions"
+                empty="Not Trashed"
+                name="trash"
             />
 
             <jet-select
                 v-if="sort"
+                v-query:[connect]="sortHandler"
                 :options="sortOptions"
                 empty="Sort"
                 name="sort"
-                v-query:[connect]="sortHandler"
             />
 
             <span
                 v-if="$slots['filters']"
-                class="select rounded-md border border-gray-300 cursor-pointer"
-                @click="filtering = true"
                 :class="{
           'bg-blue-100 border-2 border-blue-500': isFiltering,
           'bg-white': !isFiltering,
         }"
+                class="select rounded-md border border-gray-300 cursor-pointer"
+                @click="filtering = true"
             >
         Filters
       </span>
         </div>
         <div
             v-if="$slots['filters'] && filtering"
-            class="fixed inset-0 overflow-hidden"
             aria-labelledby="slide-over-title"
-            role="dialog"
             aria-modal="true"
+            class="fixed inset-0 overflow-hidden"
+            role="dialog"
         >
             <div class="absolute inset-0 overflow-hidden">
                 <div
-                    @click="filtering = false"
-                    class="absolute inset-0 transition-opacity"
                     aria-hidden="true"
+                    class="absolute inset-0 transition-opacity"
+                    @click="filtering = false"
                 ></div>
                 <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
                     <div class="relative w-screen max-w-md">
@@ -80,25 +80,25 @@
                             class="absolute top-0 left-0 -ml-8 pt-4 pr-2 flex sm:-ml-10 sm:pr-4"
                         >
                             <button
-                                @click="filtering = false"
-                                type="button"
                                 class="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                                type="button"
+                                @click="filtering = false"
                             >
                                 <span class="sr-only">Close panel</span>
                                 <!-- Heroicon name: outline/x -->
                                 <svg
-                                    class="h-6 w-6"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
                                     aria-hidden="true"
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
                                 >
                                     <path
+                                        d="M6 18L18 6M6 6l12 12"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                         stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"
                                     />
                                 </svg>
                             </button>
@@ -109,8 +109,8 @@
                         >
                             <div class="px-4 sm:px-6 pb-6 border-b">
                                 <h2
-                                    class="text-lg font-medium text-gray-900"
                                     id="slide-over-title"
+                                    class="text-lg font-medium text-gray-900"
                                 >
                                     Filters
                                 </h2>
@@ -118,11 +118,11 @@
                             <div class="mt-6 relative flex-1 px-4 sm:px-6">
                                 <div class="absolute inset-0 px-4 sm:px-6">
                                     <div
-                                        class="h-full flex justify-between flex-col"
                                         aria-hidden="true"
+                                        class="h-full flex justify-between flex-col"
                                     >
                                         <div class="flex-1 overflow-auto">
-                                            <slot name="filters" :filters="filterValues"/>
+                                            <slot :filters="filterValues" name="filters"/>
                                         </div>
                                         <div class="flex space-x-4 pb-8 pt-4 border-t mt-4">
                                             <jet-button @click="filterHandler">Filter</jet-button>
@@ -250,7 +250,7 @@ export default {
             this.applyHandler('filter', 'onFilter', filters)
         },
         applyHandler(emit, listener, payload) {
-            if(this.$attrs[listener]) {
+            if (this.$attrs[listener]) {
                 this.$emit(emit, payload)
             } else if (this.connect) {
                 this.connectChanged('updateQuery', payload);
