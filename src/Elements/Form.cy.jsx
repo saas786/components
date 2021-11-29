@@ -3,7 +3,7 @@ import Form from './Form.vue'
 describe('Form Setup', () => {
 
     it('renders form element with attributes', () => {
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 method: 'POST',
                 action: '/users/new',
@@ -23,7 +23,7 @@ describe('Form Setup', () => {
 describe('Form Fields', () => {
 
     it('with a flat array of field names', () => {
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 action: '/users/new',
                 fields: ['title', 'description']
@@ -38,7 +38,7 @@ describe('Form Fields', () => {
     })
 
     it('with values when passed a values object', () => {
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 fields: ['title', 'description'],
                 values: {title: 'Titanic', description: 'row row row your boat'}
@@ -50,7 +50,7 @@ describe('Form Fields', () => {
     })
 
     it('with a values object only', () => {
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 values: {title: 'Titanic', description: 'row row row your boat'}
             }
@@ -61,7 +61,7 @@ describe('Form Fields', () => {
     })
 
     it('with a values object and excludes', () => {
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 action: '/users/new',
                 exclude: ['description'],
@@ -74,11 +74,11 @@ describe('Form Fields', () => {
     })
 
     it('with an object', () => {
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 fields: [
-                    { name: 'title' },
-                    { name: 'description' },
+                    {name: 'title'},
+                    {name: 'description'},
                 ]
             }
         })
@@ -90,11 +90,11 @@ describe('Form Fields', () => {
     })
 
     it('with an object & default value', () => {
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 fields: [
-                    { name: 'title', value: 'Titanic' },
-                    { name: 'description' },
+                    {name: 'title', value: 'Titanic'},
+                    {name: 'description'},
                 ]
             }
         })
@@ -104,12 +104,12 @@ describe('Form Fields', () => {
     })
 
     it('with an object & width span', () => {
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 fields: [
-                    { name: 'title', span: 6 },
-                    { name: 'description', span: 3 },
-                    { name: 'author_id' }
+                    {name: 'title', span: 6},
+                    {name: 'description', span: 3},
+                    {name: 'author_id'}
                 ]
             }
         })
@@ -124,12 +124,12 @@ describe('Form Field Extras', () => {
 
     it('with a divider', () => {
 
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 fields: [
-                    { name: 'title' },
-                    { divider: true },
-                    { name: 'description' },
+                    {name: 'title'},
+                    {divider: true},
+                    {name: 'description'},
                 ]
             }
         })
@@ -145,12 +145,12 @@ describe('Form Field Extras', () => {
 
     it('with a section titles', () => {
 
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 fields: [
-                    { name: 'title' },
-                    { section_title: 'Some title' },
-                    { name: 'description' },
+                    {name: 'title'},
+                    {section_title: 'Some title'},
+                    {name: 'description'},
                 ]
             }
         })
@@ -168,15 +168,15 @@ describe('Form Field Extras', () => {
 
 describe('Form Field Slots', () => {
     it('overrides entire field block via slot', () => {
-        cy.mount(<Form />,{
+        cy.mount(<Form/>, {
             props: {
                 fields: ['title', 'description']
             },
             slots: {
-                'field.title.all': ({ form }) => (
+                'field.title.all': ({form}) => (
                     <div>
-                        <span id="test_output" vText={form.title} />
-                        <input name="title" vModel={form.title} />
+                        <span id="test_output" vText={form.title}/>
+                        <input name="title" vModel={form.title}/>
                     </div>
                 )
             }
@@ -193,15 +193,15 @@ describe('Form Field Slots', () => {
 
     it('overrides a field block input and keep label & error', () => {
 
-        cy.mount(<Form />,{
+        cy.mount(<Form/>, {
             props: {
                 fields: ['title', 'description']
             },
             slots: {
-                'field.title': ({ form }) => (
+                'field.title': ({form}) => (
                     <div>
-                        <span id="test_output" vText={form.title} />
-                        <input name="title" vModel={form.title} />
+                        <span id="test_output" vText={form.title}/>
+                        <input name="title" vModel={form.title}/>
                     </div>
                 )
             }
@@ -218,13 +218,13 @@ describe('Form Field Slots', () => {
 describe('Form Buttons', () => {
 
     it('submit button is "create" by default', () => {
-        cy.mount(<Form />)
+        cy.mount(<Form/>)
 
         cy.get('button[type="submit"]').should('have.text', 'Create')
     })
 
     it('submit button is "update" when passed values', () => {
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 fields: ['title'],
                 values: {title: 'Hello'}
@@ -235,7 +235,7 @@ describe('Form Buttons', () => {
     })
 
     it('cancel button does not exist by default', () => {
-        cy.mount(<Form />, {
+        cy.mount(<Form/>, {
             props: {
                 fields: ['title'],
                 values: {title: 'Hello'}
@@ -246,7 +246,8 @@ describe('Form Buttons', () => {
     })
 
     it('cancel button exists when form has cancel listener', () => {
-        cy.mount(<Form onCancel={()=> {}}/>)
+        cy.mount(<Form onCancel={() => {
+        }}/>)
 
         cy.get('button[data-testid="cancel"]').should('exist')
     })
@@ -258,7 +259,7 @@ describe('Form Submit', () => {
 
         let handler = {
             request(request) {
-                return new Promise( (resolutionFunc, rejectionFunc) => {
+                return new Promise((resolutionFunc, rejectionFunc) => {
                     resolutionFunc({
                         data: {
                             message: "Mocked handler worked",

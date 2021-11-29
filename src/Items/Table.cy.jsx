@@ -19,7 +19,7 @@ describe('Table cells', () => {
     it('with nested cells', () => {
         cy.mount(
             <Table
-                data={[{ user: { name: 'Brian' }}]}
+                data={[{user: {name: 'Brian'}}]}
                 cells={['user.name']}
             />)
 
@@ -35,12 +35,12 @@ describe('Table cell slots', () => {
                 data={[{title: 'Titanic', description: 'a movie'}]}
                 cells={['title', 'description']}
             />, {
-            slots: {
-                'td.title': ({ form }) => (
-                    <span id="title_slot">Titanic 2</span>
-                )
-            }
-        })
+                slots: {
+                    'td.title': ({form}) => (
+                        <span id="title_slot">Titanic 2</span>
+                    )
+                }
+            })
 
         cy.get('td').eq(0).should('have.text', 'Titanic 2')
     })
@@ -51,12 +51,12 @@ describe('Table cell slots', () => {
                 data={[{title: 'Titanic', description: 'a movie'}]}
                 cells={['title', 'description']}
             />, {
-            slots: {
-                'th.title': ({ form }) => (
-                    <span id="title_slot">Custom Title</span>
-                )
-            }
-        })
+                slots: {
+                    'th.title': ({form}) => (
+                        <span id="title_slot">Custom Title</span>
+                    )
+                }
+            })
 
         cy.get('th').should('have.length', 2)
         cy.get('th').eq(0).should('have.text', 'Custom Title')
